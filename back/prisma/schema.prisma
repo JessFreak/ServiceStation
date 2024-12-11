@@ -14,13 +14,14 @@ enum Role {
 }
 
 model User {
-  id       String @id @default(uuid())
-  name     String
-  surname  String
-  email    String @unique
-  phone    String @unique
-  password String
-  role     Role   @default(USER)
+  id        String  @id @default(uuid())
+  name      String
+  surname   String
+  email     String  @unique
+  phone     String? @unique
+  avatarUrl String? @map("avatar_url")
+  password  String
+  role      Role    @default(USER)
 
   vehicles      Vehicle[]
   workingOrders Order[]
@@ -62,11 +63,11 @@ model Order {
   status    Status   @default(WAITING)
   orderDate DateTime
 
-  vehicleId String  @map("vehicle_id")
-  vehicle   Vehicle @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+  vehicleId String?  @map("vehicle_id")
+  vehicle   Vehicle? @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
 
-  workerId String @map("worker_id")
-  worker   User   @relation(fields: [workerId], references: [id], onDelete: SetNull)
+  workerId String? @map("worker_id")
+  worker   User?   @relation(fields: [workerId], references: [id], onDelete: SetNull)
 
   services OrderService[]
 
@@ -91,7 +92,7 @@ model OrderService {
   order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
   serviceId String  @map("service_id")
-  service   Service @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
 
   @@id([orderId, serviceId])
   @@map("orders_services")
