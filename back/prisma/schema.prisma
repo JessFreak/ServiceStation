@@ -7,13 +7,92 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  USER
+  WORKER
+  ADMIN
+}
+
 model User {
   id       String @id @default(uuid())
   name     String
   surname  String
   email    String @unique
-  phone    String
+  phone    String @unique
   password String
+  role     Role   @default(USER)
+
+  vehicles      Vehicle[]
+  workingOrders Order[]
 
   @@map("users")
+}
+
+enum Type {
+  CAR
+  TRUCK
+  MOTOCYCLE
+  BUS
+  VAN
+}
+
+model Vehicle {
+  id    String @id @default(uuid())
+  model String
+  vin   String @unique
+  type  Type
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  orders Order[]
+
+  @@map("vehicles")
+}
+
+enum Status {
+  WAITING
+  PROCESSING
+  DONE
+  CANCELED
+}
+
+model Order {
+  id        String   @id @default(uuid())
+  status    Status   @default(WAITING)
+  orderDate DateTime
+
+  vehicleId String  @map("vehicle_id")
+  vehicle   Vehicle @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+
+  workerId String @map("worker_id")
+  worker   User   @relation(fields: [workerId], references: [id], onDelete: SetNull)
+
+  services OrderService[]
+
+  @@map("orders")
+}
+
+model Service {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  price       Float
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+
+  orders OrderService[]
+
+  @@map("services")
+}
+
+model OrderService {
+  orderId String @map("order_id")
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  serviceId String  @map("service_id")
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+
+  @@id([orderId, serviceId])
+  @@map("orders_services")
 }
