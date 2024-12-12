@@ -7,6 +7,7 @@ import { GoogleStrategy } from '../config/security/strategies/GoogleStrategy';
 import { JwtStrategy } from '../config/security/strategies/JwtStrategy';
 import { JwtModule } from '@nestjs/jwt';
 import config from '../config/config';
+import { RoleGuard } from '../config/security/guards/RoleGuard';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import config from '../config/config';
     JwtAuthGuard,
     GoogleStrategy,
     JwtStrategy,
+    RoleGuard
   ],
   exports: [AuthService],
 })

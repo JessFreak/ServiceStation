@@ -12,7 +12,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     super();
   }
 
-  async canActivate(context) {
+  async canActivate(context): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = request.cookies['access_token'];
 

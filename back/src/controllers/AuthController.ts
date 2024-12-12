@@ -20,11 +20,11 @@ export class AuthController {
 
   @Get('google')
   @UseGuards(GoogleOauthGuard)
-  async auth () {}
+  async auth (): Promise<void> {}
 
   @Get('google/callback')
   @UseGuards(GoogleOauthGuard)
-  async googleAuthCallback (@UserRequest() user: User, @Res() res: Response) {
+  async googleAuthCallback (@UserRequest() user: User, @Res() res: Response): Promise<Response> {
     return this.authService.setToken(user.id, res);
   }
 
