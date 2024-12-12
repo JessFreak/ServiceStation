@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { AuthController } from '../controllers/AuthController';
 import { AuthService } from '../services/AuthService';
 import { GoogleOauthGuard } from '../config/security/guards/GoogleOAuthGuard';
@@ -8,18 +8,24 @@ import { JwtModule } from '@nestjs/jwt';
 import config from '../config/config';
 import { RoleGuard } from '../config/security/guards/RoleGuard';
 
+@Global()
 @Module({
-  imports: [
-    JwtModule.registerAsync(config.asProvider()),
-  ],
+  imports: [JwtModule.registerAsync(config.asProvider())],
   controllers: [AuthController],
   providers: [
     AuthService,
     GoogleOauthGuard,
     JwtAuthGuard,
     GoogleStrategy,
-    RoleGuard
+    RoleGuard,
   ],
-  exports: [AuthService],
+  exports: [
+    AuthService,
+    GoogleOauthGuard,
+    JwtAuthGuard,
+    GoogleStrategy,
+    RoleGuard,
+    JwtModule,
+  ],
 })
 export class AuthModule {}

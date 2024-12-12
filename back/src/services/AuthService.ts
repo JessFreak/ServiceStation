@@ -5,13 +5,13 @@ import {
 import { compare, hash } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { UserRepository } from '../database/repositories/UserRepository';
-import { LoginDTO, RegisterDTO } from '../dtos/AuthDTO';
+import { LoginDTO, RegisterDTO } from '../utils/dtos/AuthDTO';
 import { Response } from 'express';
 import { AlreadyRegisteredException } from '../utils/exceptions/AlreadyRegisteredException';
 import { GoogleUser } from '../utils/types/GoogleUser';
 import { NotRegisteredException } from '../utils/exceptions/NotRegisteredException';
 import { PasswordRepeatException } from '../utils/exceptions/PasswordRepeatException';
-import { UpdatePasswordDto } from '../dtos/ChangePasswordDTO';
+import { UpdatePasswordDto } from '../utils/dtos/ChangePasswordDTO';
 
 @Injectable()
 export class AuthService {

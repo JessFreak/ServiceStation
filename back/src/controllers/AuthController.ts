@@ -11,11 +11,11 @@ import {
 import { Response } from 'express';
 import { AuthService } from '../services/AuthService';
 import { GoogleOauthGuard } from '../config/security/guards/GoogleOAuthGuard';
-import { LoginDTO, RegisterDTO } from '../dtos/AuthDTO';
+import { LoginDTO, RegisterDTO } from '../utils/dtos/AuthDTO';
 import { UserRequest } from '../config/security/decorators/UserRequest';
 import { User } from '@prisma/client';
 import { Access } from '../config/security/decorators/Access';
-import { UpdatePasswordDto } from '../dtos/ChangePasswordDTO';
+import { UpdatePasswordDto } from '../utils/dtos/ChangePasswordDTO';
 
 @Controller('/auth')
 export class AuthController {
