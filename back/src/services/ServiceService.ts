@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ServiceRepository } from '../database/repositories/ServiceRepository';
 import { CreateServiceDTO, UpdateServiceDTO } from '../utils/dtos/ServiceDTO';
 import { Service } from '@prisma/client';
+import { IsActiveDTO } from '../utils/dtos/IsActiveDTO';
 
 @Injectable()
 export class ServiceService {
@@ -11,8 +12,9 @@ export class ServiceService {
     return this.serviceRepository.create(data);
   }
 
-  async getAll(): Promise<Service[]> {
-    return this.serviceRepository.findMany({});
+  async getAll({ isActive }: IsActiveDTO): Promise<Service[]> {
+    console.log(isActive);
+    return this.serviceRepository.findMany({ isActive });
   }
 
   async updateById (id: string, data: UpdateServiceDTO): Promise<Service> {

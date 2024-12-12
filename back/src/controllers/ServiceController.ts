@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ServiceService } from '../services/ServiceService';
 import { Access } from '../config/security/decorators/Access';
 import { Role, Service } from '@prisma/client';
 import { CreateServiceDTO, UpdateServiceDTO } from '../utils/dtos/ServiceDTO';
+import { IsActiveDTO } from '../utils/dtos/IsActiveDTO';
 
 @Controller('services')
 export class ServiceController {
@@ -16,8 +17,8 @@ export class ServiceController {
 
   @Get()
   @Access()
-  getAll (): Promise<Service[]> {
-    return this.serviceService.getAll();
+  getAll (@Query() isActive?: IsActiveDTO): Promise<Service[]> {
+    return this.serviceService.getAll(isActive);
   }
 
   @Patch(':serviceId')
