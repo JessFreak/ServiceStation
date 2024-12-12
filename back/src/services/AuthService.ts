@@ -10,6 +10,8 @@ import { Response } from 'express';
 import { AlreadyRegisteredException } from '../utils/exceptions/AlreadyRegisteredException';
 import { GoogleUser } from '../utils/types/GoogleUser';
 import { NotRegisteredException } from '../utils/exceptions/NotRegisteredException';
+import { PasswordRepeatException } from '../utils/exceptions/PasswordRepeatException';
+import { UpdatePasswordDto } from '../dtos/ChangePasswordDTO';
 
 @Injectable()
 export class AuthService {
@@ -32,12 +34,16 @@ export class AuthService {
     });
   }
 
+  private async validatePassword (password: string, userPassword: string): Promise<void> {
+    const isPasswordsMatch = await compare(password, userPassword);
+    if (!isPasswordsMatch) throw new BadRequestException('Invalid password');
+  }
+
   async login ({ email, password }: LoginDTO) {
     const user = await this.userRepository.findByEmail(email);
     if (!user) throw new NotRegisteredException;
 
-    const isPasswordsMatch = await compare(password, user.password);
-    if (!isPasswordsMatch) throw new BadRequestException('Invalid password');
+    await this.validatePassword(password, user.password);
 
     return { id: user.id };
   }
@@ -61,5 +67,22 @@ export class AuthService {
   logout(res: Response): Response {
     res.clearCookie('access_token');
     return res.status(200).json();
+  }
+
+  async deleteMe(userId: string, res: Response): Promise<Response> {
+    await this.userRepository.deleteById(userId);
+    return this.logout(res);
+  }
+
+  async updatePassword(userId: string, { oldPassword, newPassword }: UpdatePasswordDto) {
+    const user = await this.userRepository.findById(userId);
+    await this.validatePassword(oldPassword, user.password);
+
+    if (oldPassword === newPassword) {
+      throw new PasswordRepeatException;
+    }
+
+    const hashedPassword = await hash(newPassword, 10);
+    await this.userRepository.updateById(userId, { password: hashedPassword });
   }
 }

@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  Patch,
   Post,
   Res,
   UseGuards,
@@ -13,6 +15,7 @@ import { LoginDTO, RegisterDTO } from '../dtos/AuthDTO';
 import { UserRequest } from '../config/security/decorators/UserRequest';
 import { User } from '@prisma/client';
 import { Access } from '../config/security/decorators/Access';
+import { UpdatePasswordDto } from '../dtos/ChangePasswordDTO';
 
 @Controller('/auth')
 export class AuthController {
@@ -42,14 +45,26 @@ export class AuthController {
   }
 
   @Access()
+  @Post('logout')
+  logout (@Res() res: Response): Response {
+    return this.authService.logout(res);
+  }
+
+  @Access()
   @Get('me')
   getMe (@UserRequest() user: User): User {
     return user;
   }
 
   @Access()
-  @Post('logout')
-  logout (@Res() res: Response): Response {
-    return this.authService.logout(res);
+  @Delete('me')
+  deleteMe(@UserRequest() user: User, @Res() res: Response): Promise<Response> {
+    return this.authService.deleteMe(user.id, res);
+  }
+
+  @Access()
+  @Patch('password')
+  async updatePassword (@UserRequest() user: User, @Body() body: UpdatePasswordDto): Promise<void> {
+    return this.authService.updatePassword(user.id, body);
   }
 }

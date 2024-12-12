@@ -4,7 +4,6 @@ import { AuthService } from '../services/AuthService';
 import { GoogleOauthGuard } from '../config/security/guards/GoogleOAuthGuard';
 import { JwtAuthGuard } from '../config/security/guards/JwtAuthGuard';
 import { GoogleStrategy } from '../config/security/strategies/GoogleStrategy';
-import { JwtStrategy } from '../config/security/strategies/JwtStrategy';
 import { JwtModule } from '@nestjs/jwt';
 import config from '../config/config';
 import { RoleGuard } from '../config/security/guards/RoleGuard';
@@ -19,7 +18,6 @@ import { RoleGuard } from '../config/security/guards/RoleGuard';
     GoogleOauthGuard,
     JwtAuthGuard,
     GoogleStrategy,
-    JwtStrategy,
     RoleGuard
   ],
   exports: [AuthService],
