@@ -1,14 +1,32 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { Access } from '../config/security/decorators/Access';
 import { UserRequest } from '../config/security/decorators/UserRequest';
-import { User, Vehicle } from '@prisma/client';
+import { Role, User, Vehicle } from '@prisma/client';
 import { UpdateUserDTO } from '../utils/dtos/UpdateUserDTO';
 import { CreateVehicleDTO, UpdateVehicleDTO } from '../utils/dtos/VehicleDTO';
 import { UserService } from '../services/UserService';
+import { AuthService } from '../services/AuthService';
+import { CreateUserDTO } from '../utils/dtos/CreateUserDTO';
+import { RoleDTO } from '../utils/dtos/RoleDTO';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly authService: AuthService,
+  ) {}
+
+  @Post()
+  @Access(Role.ADMIN)
+  create(@Body() body: CreateUserDTO): Promise<User> {
+    return this.authService.register(body);
+  }
+
+  @Get()
+  @Access(Role.ADMIN)
+  getAll(@Query() role?: RoleDTO): Promise<User[]> {
+    return this.userService.getAllUsers(role);
+  }
 
   @Patch()
   @Access()
@@ -37,5 +55,4 @@ export class UsersController {
   ): Promise<Vehicle> {
     return this.userService.updateVehicle(user.id, vehicleId, body);
   }
-
 }

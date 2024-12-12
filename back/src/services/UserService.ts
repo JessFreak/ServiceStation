@@ -5,6 +5,7 @@ import { User, Vehicle } from '@prisma/client';
 import { UpdateUserDTO } from '../utils/dtos/UpdateUserDTO';
 import { CreateVehicleDTO, UpdateVehicleDTO } from '../utils/dtos/VehicleDTO';
 import { NotBelongException } from '../utils/exceptions/NotBelongException';
+import { RoleDTO } from '../utils/dtos/RoleDTO';
 
 @Injectable()
 export class UserService {
@@ -12,6 +13,10 @@ export class UserService {
     private readonly userRepository: UserRepository,
     private readonly vehicleRepository: VehicleRepository,
   ) {}
+
+  getAllUsers({ role }: RoleDTO): Promise<User[]> {
+    return this.userRepository.findMany({ role });
+  }
 
   async update (id: string, data: UpdateUserDTO): Promise<User> {
     return this.userRepository.updateById(id, data);

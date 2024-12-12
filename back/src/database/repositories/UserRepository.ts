@@ -18,8 +18,12 @@ export class UserRepository {
     return this.prisma.user.findFirst({ where: { id } });
   }
 
-  async findByEmail (email: string): Promise<User>  {
+  async findByEmail (email: string): Promise<User> {
     return this.prisma.user.findFirst({ where: { email } });
+  }
+
+  async findMany (where: Prisma.UserWhereInput): Promise<User[]> {
+    return this.prisma.user.findMany({ where });
   }
 
   async updateById (id: string, data: Prisma.UserUncheckedUpdateInput): Promise<User> {
