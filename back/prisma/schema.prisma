@@ -80,6 +80,7 @@ model Service {
   name        String
   description String?
   price       Float
+  isActive    Boolean  @map("is_active") @default(true)
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
 
