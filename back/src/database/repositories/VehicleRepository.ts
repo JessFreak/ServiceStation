@@ -18,6 +18,10 @@ export class VehicleRepository {
     return this.prisma.vehicle.findFirst({ where: { id } });
   }
 
+  async find (where: Prisma.VehicleWhereInput): Promise<Vehicle> {
+    return this.prisma.vehicle.findFirst({ where });
+  }
+
   async updateById (id: string, data: Prisma.VehicleUncheckedUpdateInput): Promise<Vehicle> {
     return this.prisma.vehicle.update({ where: { id: id }, data });
   }

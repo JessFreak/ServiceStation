@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
 import { PrismaService } from '../PrismaService';
+import { Worker } from '../entities/Worker';
 
 @Injectable()
 export class UserRepository {
@@ -22,8 +23,8 @@ export class UserRepository {
     return this.prisma.user.findFirst({ where: { email } });
   }
 
-  async findMany (where: Prisma.UserWhereInput): Promise<User[]> {
-    return this.prisma.user.findMany({ where });
+  async findMany (args: Prisma.UserFindManyArgs): Promise<User[] | Worker[]> {
+    return this.prisma.user.findMany(args);
   }
 
   async updateById (id: string, data: Prisma.UserUncheckedUpdateInput): Promise<User> {

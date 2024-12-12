@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, IsPhoneNumber, IsString } from 'class-validator';
 
 export class LoginDTO {
   @IsEmail({})
@@ -21,6 +21,6 @@ export class RegisterDTO extends LoginDTO {
   surname: string;
 
   @IsOptional()
-  @IsString()
+  @IsPhoneNumber('UA')
   phone?: string;
 }

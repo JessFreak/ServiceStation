@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { UserRepository } from '../database/repositories/UserRepository';
 import { VehicleRepository } from '../database/repositories/VehicleRepository';
 import { User, Vehicle } from '@prisma/client';
-import { UpdateUserDTO } from '../utils/dtos/UpdateUserDTO';
 import { CreateVehicleDTO, UpdateVehicleDTO } from '../utils/dtos/VehicleDTO';
 import { NotBelongException } from '../utils/exceptions/NotBelongException';
-import { RoleDTO } from '../utils/dtos/RoleDTO';
+import { RoleDTO, UpdateUserDTO } from '../utils/dtos/UserDTO';
+import { AlreadyRegisteredException } from '../utils/exceptions/AlreadyRegisteredException';
 
 @Injectable()
 export class UserService {
@@ -15,7 +15,7 @@ export class UserService {
   ) {}
 
   getAllUsers({ role }: RoleDTO): Promise<User[]> {
-    return this.userRepository.findMany({ role });
+    return this.userRepository.findMany({ where: { role } });
   }
 
   async update (id: string, data: UpdateUserDTO): Promise<User> {
@@ -23,6 +23,9 @@ export class UserService {
   }
 
   async addVehicle (id: string, data: CreateVehicleDTO): Promise<Vehicle> {
+    const vehicle = await this.vehicleRepository.find({ vin: data.vin });
+    if (vehicle) throw new AlreadyRegisteredException('Vehicle', 'VIN');
+
     return this.vehicleRepository.create({ userId: id, ...data });
   }
 

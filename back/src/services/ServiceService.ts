@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ServiceRepository } from '../database/repositories/ServiceRepository';
-import { CreateServiceDTO, UpdateServiceDTO } from '../utils/dtos/ServiceDTO';
+import { CreateServiceDTO, IsActiveDTO, UpdateServiceDTO } from '../utils/dtos/ServiceDTO';
 import { Service } from '@prisma/client';
-import { IsActiveDTO } from '../utils/dtos/IsActiveDTO';
 
 @Injectable()
 export class ServiceService {

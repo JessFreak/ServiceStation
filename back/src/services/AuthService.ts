@@ -23,7 +23,7 @@ export class AuthService {
   async register (user: RegisterDTO) {
     const exist = await this.userRepository.findByEmail(user.email);
     if (exist) {
-      throw new AlreadyRegisteredException;
+      throw new AlreadyRegisteredException('User', 'email');
     }
 
     const hashedPassword = await hash(user.password, 10);
@@ -41,7 +41,7 @@ export class AuthService {
 
   async login ({ email, password }: LoginDTO) {
     const user = await this.userRepository.findByEmail(email);
-    if (!user) throw new NotRegisteredException;
+    if (!user) throw new NotRegisteredException();
 
     await this.validatePassword(password, user.password);
 
