@@ -9,6 +9,7 @@ import { LoginDTO, RegisterDTO } from '../dtos/AuthDTO';
 import { Response } from 'express';
 import { AlreadyRegisteredException } from '../utils/exceptions/AlreadyRegisteredException';
 import { GoogleUser } from '../utils/types/GoogleUser';
+import { NotRegisteredException } from '../utils/exceptions/NotRegisteredException';
 
 @Injectable()
 export class AuthService {
@@ -18,9 +19,9 @@ export class AuthService {
   ) {}
 
   async register (user: RegisterDTO) {
-    const exist = this.userRepository.findByEmail(user.email);
+    const exist = await this.userRepository.findByEmail(user.email);
     if (exist) {
-      throw new BadRequestException('Email is already registered');
+      throw new AlreadyRegisteredException;
     }
 
     const hashedPassword = await hash(user.password, 10);
@@ -33,7 +34,7 @@ export class AuthService {
 
   async login ({ email, password }: LoginDTO) {
     const user = await this.userRepository.findByEmail(email);
-    if (!user) throw new AlreadyRegisteredException();
+    if (!user) throw new NotRegisteredException;
 
     const isPasswordsMatch = await compare(password, user.password);
     if (!isPasswordsMatch) throw new BadRequestException('Invalid password');

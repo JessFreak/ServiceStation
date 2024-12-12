@@ -10,9 +10,9 @@ import { Response } from 'express';
 import { AuthService } from '../services/AuthService';
 import { GoogleOauthGuard } from '../config/security/guards/GoogleOAuthGuard';
 import { LoginDTO, RegisterDTO } from '../dtos/AuthDTO';
-import { JwtAuthGuard } from '../config/security/guards/JwtAuthGuard';
-import { UserRequest } from '../utils/decorators/UserRequest';
+import { UserRequest } from '../config/security/decorators/UserRequest';
 import { User } from '@prisma/client';
+import { Access } from '../config/security/decorators/Access';
 
 @Controller('/auth')
 export class AuthController {
@@ -20,11 +20,11 @@ export class AuthController {
 
   @Get('google')
   @UseGuards(GoogleOauthGuard)
-  async auth (): Promise<void> {}
+  auth (): void {}
 
   @Get('google/callback')
   @UseGuards(GoogleOauthGuard)
-  async googleAuthCallback (@UserRequest() user: User, @Res() res: Response): Promise<Response> {
+  googleAuthCallback (@UserRequest() user: User, @Res() res: Response): Response {
     return this.authService.setToken(user.id, res);
   }
 
@@ -41,13 +41,13 @@ export class AuthController {
     return this.authService.setToken(id, res);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Access()
   @Get('me')
   getMe (@UserRequest() user: User): User {
     return user;
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Access()
   @Post('logout')
   logout (@Res() res: Response): Response {
     return this.authService.logout(res);
