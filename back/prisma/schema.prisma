@@ -14,11 +14,11 @@ enum Role {
 }
 
 model User {
-  id        String  @id @default(uuid())
-  name      String
-  surname   String
-  email     String  @unique
-  phone     String? @unique
+  id        String  @id @default(uuid()) @db.VarChar(36)
+  name      String  @db.VarChar(100)
+  surname   String  @db.VarChar(100)
+  email     String  @unique @db.VarChar(255)
+  phone     String? @unique @db.VarChar(20)
   avatarUrl String? @map("avatar_url")
   password  String
   role      Role    @default(USER)
@@ -38,13 +38,13 @@ enum Type {
 }
 
 model Vehicle {
-  id    String @id @default(uuid())
+  id    String @id @default(uuid()) @db.VarChar(36)
   model String
-  year  Int
-  vin   String @unique
+  year  Int    @db.SmallInt
+  vin   String @unique @db.VarChar(17)
   type  Type
 
-  userId String @map("user_id")
+  userId String @map("user_id") @db.VarChar(36)
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   orders Order[]
@@ -60,16 +60,16 @@ enum Status {
 }
 
 model Order {
-  id        String   @id @default(uuid())
+  id        String   @id @default(uuid()) @db.VarChar(36)
   status    Status   @default(WAITING)
   orderDate DateTime
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-  vehicleId String?  @map("vehicle_id")
+  vehicleId String?  @map("vehicle_id") @db.VarChar(36)
   vehicle   Vehicle? @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
 
-  workerId String? @map("worker_id")
+  workerId String? @map("worker_id") @db.VarChar(36)
   worker   User?   @relation(fields: [workerId], references: [id], onDelete: SetNull)
 
   services OrderService[]
@@ -78,8 +78,8 @@ model Order {
 }
 
 model Service {
-  id          String   @id @default(uuid())
-  name        String
+  id          String   @id @default(uuid()) @db.VarChar(36)
+  name        String   @db.VarChar(100)
   description String?
   price       Float
   isActive    Boolean  @map("is_active") @default(true)
@@ -92,10 +92,10 @@ model Service {
 }
 
 model OrderService {
-  orderId String @map("order_id")
+  orderId String @map("order_id") @db.VarChar(36)
   order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
-  serviceId String  @map("service_id")
+  serviceId String  @map("service_id") @db.VarChar(36)
   service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
 
   @@id([orderId, serviceId])
