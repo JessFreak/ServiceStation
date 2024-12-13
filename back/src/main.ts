@@ -14,6 +14,7 @@ async function bootstrap () {
   app.use(cookieParser());
 
   const port = process.env.PORT;
+  app.enableCors();
   await app.listen(port);
 
   console.log(`Started server on localhost:${port}`);
