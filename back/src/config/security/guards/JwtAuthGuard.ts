@@ -1,4 +1,4 @@
-import { ExecutionContext, Injectable } from '@nestjs/common';
+import { ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 import { UserRepository } from '../../../database/repositories/UserRepository';
@@ -16,14 +16,27 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     const request = context.switchToHttp().getRequest();
     const token = request.cookies['access_token'];
 
-    if (!token) return false;
+    if (!token) {
+      throw new UnauthorizedException('Token not found');
+    }
 
-    const { sub } = this.jwtService.verify(token);
+    try {
+      const { sub } = this.jwtService.verify(token);
 
-    const user = await this.userRepository.findById(sub);
-    delete user.password;
+      const user = await this.userRepository.findById(sub);
+      if (!user) {
+        throw new UnauthorizedException('User not found');
+      }
 
-    request.user = user;
-    return true;
+      delete user.password;
+      request.user = user;
+
+      return true;
+    } catch (error) {
+      if (error.name === 'TokenExpiredError') {
+        throw new UnauthorizedException('JWT token expired');
+      }
+      throw new UnauthorizedException('Unauthorized');
+    }
   }
 }
