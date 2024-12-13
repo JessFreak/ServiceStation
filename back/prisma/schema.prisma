@@ -32,7 +32,7 @@ model User {
 enum Type {
   CAR
   TRUCK
-  MOTOCYCLE
+  MOTORCYCLE
   BUS
   VAN
 }
