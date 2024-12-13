@@ -12,6 +12,7 @@ import { UserMapper } from '../utils/mappers/UserMapper';
 import { UserResponse } from '../utils/types/UserResponse';
 import { OrderResponse } from '../utils/types/OrderResponse';
 import { OrderMapper } from '../utils/mappers/OrderMapper';
+import { VehicleByIdPipe } from '../utils/pipes/VehicleByIdPipe';
 
 @Controller('users')
 export class UsersController {
@@ -58,7 +59,7 @@ export class UsersController {
   @Access()
   updateVehicle (
     @UserRequest() user: UserResponse,
-    @Param('vehicleId') vehicleId: string,
+    @Param('vehicleId', VehicleByIdPipe) vehicleId: string,
     @Body() body: UpdateVehicleDTO,
   ): Promise<Vehicle> {
     return this.userService.updateVehicle(user.id, vehicleId, body);
