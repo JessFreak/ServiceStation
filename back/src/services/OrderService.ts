@@ -5,6 +5,7 @@ import { UserRepository } from '../database/repositories/UserRepository';
 import { NoAvailableWorkerException } from '../utils/exceptions/NoAvailableWorkerException';
 import { Role, Status } from '@prisma/client';
 import { Worker } from '../database/entities/Worker';
+import { OrderDB } from '../database/entities/OrderDB';
 
 @Injectable()
 export class OrderService {
@@ -13,7 +14,7 @@ export class OrderService {
     private readonly userRepository: UserRepository,
   ) {}
 
-  async create (data: CreateOrderDTO) {
+  async create (data: CreateOrderDTO):Promise<OrderDB> {
     const worker = await this.findAvailableWorker(data.orderDate);
     if (!worker) throw new NoAvailableWorkerException();
 
@@ -70,11 +71,11 @@ export class OrderService {
     });
   }
 
-  async updateWorker (id: string, workerId: string) {
+  async updateWorker (id: string, workerId: string):Promise<OrderDB> {
     return this.orderRepository.updateById(id, { workerId });
   }
 
-  async updateStatus (id: string, status: Status) {
+  async updateStatus (id: string, status: Status):Promise<OrderDB> {
     return this.orderRepository.updateById(id, { status });
   }
 }

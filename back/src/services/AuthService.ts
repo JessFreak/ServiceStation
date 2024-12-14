@@ -12,6 +12,7 @@ import { GoogleUser } from '../utils/types/GoogleUser';
 import { NotRegisteredException } from '../utils/exceptions/NotRegisteredException';
 import { PasswordRepeatException } from '../utils/exceptions/PasswordRepeatException';
 import { UpdatePasswordDto } from '../utils/dtos/ChangePasswordDTO';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -20,7 +21,7 @@ export class AuthService {
     private readonly userRepository: UserRepository,
   ) {}
 
-  async register (user: RegisterDTO) {
+  async register (user: RegisterDTO): Promise<User> {
     const exist = await this.userRepository.findByEmail(user.email);
     if (exist) {
       throw new AlreadyRegisteredException('User', 'email');
@@ -39,7 +40,7 @@ export class AuthService {
     if (!isPasswordsMatch) throw new BadRequestException('Invalid password');
   }
 
-  async login ({ email, password }: LoginDTO) {
+  async login ({ email, password }: LoginDTO): Promise<{ id: string }> {
     const user = await this.userRepository.findByEmail(email);
     if (!user) throw new NotRegisteredException();
 
@@ -48,7 +49,7 @@ export class AuthService {
     return { id: user.id };
   }
 
-  async validateGoogleUser (googleUser: GoogleUser) {
+  async validateGoogleUser (googleUser: GoogleUser): Promise<User> {
     const user = await this.userRepository.findByEmail(googleUser.email);
     if (user) return user;
 
@@ -74,7 +75,7 @@ export class AuthService {
     return this.logout(res);
   }
 
-  async updatePassword(userId: string, { oldPassword, newPassword }: UpdatePasswordDto) {
+  async updatePassword(userId: string, { oldPassword, newPassword }: UpdatePasswordDto): Promise<void> {
     const user = await this.userRepository.findById(userId);
     await this.validatePassword(oldPassword, user.password);
 
