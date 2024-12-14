@@ -1,0 +1,209 @@
+@startuml
+left to right direction
+top to bottom direction
+skinparam classAttributeIconSize 10
+skinparam linetype ortho
+
+class AppModule {
+  + init(): AppModule
+}
+
+class AuthController {
+  + auth(): void
+  + googleAuthCallback(user: User, res: Response): Response
+  + register(body: RegisterDto): void
+  + login(body: LoginDto, res: Response): Response
+  + logout(res: Response): Response
+  + getMe(user: User): User
+  + deleteMe(user: User, res: Response): Response
+  + updatePassword(user: User, body: UpdatePasswordDto): void
+}
+
+class OrderController {
+  + create(body: CreateOrderDto): Order
+  + getAll(query: GetOrdersQueryDto, serviceId: string, userId: string): Order[]
+  + getAllAssigned(user: User, query: GetAssignedOrdersDto): Order[]
+  + updateWorker(orderId: string, body: UpdateWorkerDto, workerId: string): Order
+  + updateStatus(orderId: string, body: UpdateStatusDto): Order
+}
+
+class ServiceController {
+  + create(body: CreateServiceDto): Service
+  + getAll(isActive: boolean): Service[]
+  + update(serviceId: string, body: UpdateServiceDto): Service
+  + delete(serviceId: string): void
+}
+
+class UserController {
+  + create(body: CreateUserDto): User
+  + getAll(role: string): User[]
+  + update(user: User, body: UpdateUserDto): User
+  + addVehicle(user: User, body: AddVehicleDto): Vehicle
+  + getVehicles(user: User): Vehicle[]
+  + updateVehicle(user: User, vehicleId: string, body: UpdateVehicleDto): Vehicle
+  + getHistory(user: User, query: GetHistoryDto): Order[]
+}
+
+class PrismaService {
+  + onModuleInit(): void
+}
+
+class AuthModule {
+  + init(): AuthModule
+}
+
+class OrderModule {
+  + init(): OrderModule
+}
+
+class PrismaModule {
+  + init(): PrismaModule
+}
+
+class ServiceModule {
+  + init(): ServiceModule
+}
+
+class UserModule {
+  + init(): UserModule
+}
+
+class AuthService {
+  + register(user: RegisterDto): User
+  + validatePassword(password: string, userPassword: string): boolean
+  + login(credentials: LoginDto): LoginResponse
+  + validateGoogleUser(googleUser: GoogleUserDto): User
+  + setToken(userId: string, res: Response): Response
+  + logout(res: Response): Response
+  + deleteMe(userId: string, res: Response): Response
+  + updatePassword(userId: string, body: UpdatePasswordDto): void
+}
+
+class OrderService {
+  + create(data: CreateOrderDto): Order
+  + findAvailableWorker(orderDate: string): Worker
+  + getAll(query: GetOrdersQueryDto): Order[]
+  + updateWorker(id: string, workerId: string): Order
+  + updateStatus(id: string, status: OrderStatus): Order
+}
+
+class ServiceService {
+  + create(data: CreateServiceDto): Service
+  + getAll(filter: ServiceFilterDto): Service[]
+  + updateById(id: string, data: UpdateServiceDto): Service
+  + deleteById(id: string): void
+}
+
+class UserService {
+  + getAllUsers(filter: UserFilterDto): User[]
+  + update(id: string, data: UpdateUserDto): User
+  + addVehicle(userId: string, data: AddVehicleDto): Vehicle
+  + getUserVehicles(userId: string): Vehicle[]
+  + updateVehicle(userId: string, vehicleId: string, data: UpdateVehicleDto): Vehicle
+}
+
+class OrderRepository {
+  + include: object
+  + create(data: Order): Order
+  + findMany(where: OrderFilterDto): Order[]
+  + findById(id: string): Order
+  + updateById(id: string, data: UpdateOrderDto): Order
+}
+
+class ServiceRepository {
+  + create(data: Service): Service
+  + findMany(where: ServiceFilterDto): Service[]
+  + findById(id: string): Service
+  + updateById(id: string, data: UpdateServiceDto): Service
+  + deleteById(id: string): void
+}
+
+class UserRepository {
+  + create(data: User): User
+  + find(where: UserFilterDto): User
+  + findById(id: string): User
+  + findByEmail(email: string): User
+  + findMany(args: object): User[]
+  + updateById(id: string, data: UpdateUserDto): User
+  + deleteById(id: string): void
+}
+
+class VehicleRepository {
+  + create(data: Vehicle): Vehicle
+  + findMany(where: VehicleFilterDto): Vehicle[]
+  + findById(id: string): Vehicle
+  + find(where: object): Vehicle
+  + updateById(id: string, data: UpdateVehicleDto): Vehicle
+}
+
+class OrderByIdPipe {
+  + canActivate(context: ExecutionContext): boolean
+}
+
+class ServiceByIdPipe {
+  + canActivate(context: ExecutionContext): boolean
+}
+
+class UserByIdPipe {
+  + canActivate(context: ExecutionContext): boolean
+}
+
+class VehicleByIdPipe {
+  + canActivate(context: ExecutionContext): boolean
+}
+
+class GoogleOauthGuard {
+  + canActivate(context: ExecutionContext): boolean
+}
+
+class JwtAuthGuard {
+  + canActivate(context: ExecutionContext): boolean
+}
+
+class RoleGuard {
+  + canActivate(context: ExecutionContext): boolean
+}
+
+class GoogleStrategy {
+  + validate(accessToken: string, refreshToken: string, profile: GoogleProfile, done: Function): User
+}
+
+class CreateOrderPipe {
+  + transform(value: CreateOrderDto): CreateOrderDto
+}
+
+AppModule -r-> PrismaModule
+AppModule --up-> AuthModule
+AppModule ---> UserModule
+AppModule --> ServiceModule
+AppModule -l> OrderModule
+
+AuthModule -l> AuthService
+AuthModule -u-> GoogleOauthGuard
+AuthModule -u-> JwtAuthGuard
+AuthModule -u-> GoogleStrategy
+AuthModule -u-> RoleGuard
+AuthModule -r> AuthController
+
+OrderModule --> ServiceModule
+OrderModule -l-> OrderService
+OrderModule -u-> OrderByIdPipe
+OrderModule -u-> CreateOrderPipe
+OrderModule -l-> OrderController
+
+PrismaModule -u> PrismaService
+PrismaModule -r-> UserRepository
+PrismaModule --> VehicleRepository
+PrismaModule -u-> ServiceRepository
+PrismaModule --> OrderRepository
+
+ServiceModule -r> ServiceService
+ServiceModule -l> ServiceByIdPipe
+ServiceModule -l-> ServiceController
+
+UserModule -r-> UserService
+UserModule -l-> UserController
+UserModule --> UserByIdPipe
+UserModule --> VehicleByIdPipe
+
+@enduml
