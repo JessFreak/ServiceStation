@@ -85,6 +85,7 @@ model Service {
   isActive    Boolean  @map("is_active") @default(true)
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+  imageUrl    String?  @map("image_url")
 
   orders OrderService[]
 

@@ -12,14 +12,13 @@
 }
 
 .services__loading {
-    color: #3498db; /* Колір для завантаження */
+    color: #3498db;
 }
 
 .services__error {
-    color: #e74c3c; /* Колір для помилки */
+    color: #e74c3c;
     font-weight: bold;
 }
-
 
 .services__title {
     font-size: 2rem;
@@ -37,23 +36,22 @@
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     border-radius: 8px;
+    display: flex;
+    flex-direction: row;
     overflow: hidden;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s;
+    position: relative;
 }
 
 .service-card:hover {
     transform: scale(1.02);
 }
 
-.service-card__image img {
-    width: 100%;
-    height: auto;
-}
-
 .service-card__content {
-    padding: 15px;
     text-align: left;
+    flex: 1;
+    padding: 15px 15px 50px;
 }
 
 .service-card__content h2 {
@@ -73,6 +71,9 @@
 }
 
 .service-card__button {
+    position: absolute;
+    bottom: 10px;
+    left: 15px;
     background-color: #2c3e50;
     color: #fff;
     border: none;
@@ -84,4 +85,19 @@
 
 .service-card__button:hover {
     background-color: #1a252f;
+}
+
+.service-card__image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: auto;
+    margin-left: 20px;
+}
+
+.service-card__image img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
 }

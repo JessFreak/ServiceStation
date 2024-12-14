@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './Services.css';
-import APIClient from '../api/client';
+import APIClient from '../../api/client';
 
 export const Services = () => {
   const [services, setServices] = useState([]);
@@ -38,14 +38,14 @@ export const Services = () => {
       <div className="services__grid">
         {services.map((service, index) => (
           <div className="service-card" key={index}>
-            <div className="service-card__image">
-              <img src={service.image} alt={service.name} />
-            </div>
             <div className="service-card__content">
               <h2>{service.name}</h2>
               <p>{service.description}</p>
-              <p className="service-card__price">{service.price} грн</p>
+              <p className="service-card__price">від {service.price} грн</p>
               <button className="service-card__button">Замовити</button>
+            </div>
+            <div className="service-card__image">
+              <img src={service.imageUrl} alt={service.name} />
             </div>
           </div>
         ))}
