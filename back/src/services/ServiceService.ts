@@ -12,7 +12,6 @@ export class ServiceService {
   }
 
   async getAll({ isActive }: IsActiveDTO): Promise<Service[]> {
-    console.log(isActive);
     return this.serviceRepository.findMany({ isActive });
   }
 
