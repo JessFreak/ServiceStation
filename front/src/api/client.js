@@ -14,34 +14,29 @@ class APIClient {
       options.body = JSON.stringify(body);
     }
 
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}${endpoint}`, options);
-      console.log(response);
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Request failed');
-      }
-      return response.json();
-    } catch (error) {
-      console.error(`Error with ${method} request to ${endpoint}:`, error.message);
-      throw error;
+    const response = await fetch(`${process.env.REACT_APP_API_URL}${endpoint}`, options);
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Request failed');
     }
+    return response;
   }
 
-  static get(endpoint) {
-    return APIClient._request(endpoint, 'GET');
+  static async get(endpoint) {
+    const response = await APIClient._request(endpoint, 'GET');
+    return response.json()
   }
 
-  static post(endpoint, body) {
-    return APIClient._request(endpoint, 'POST', body);
+  static async post(endpoint, body) {
+    await APIClient._request(endpoint, 'POST', body);
   }
 
-  static patch(endpoint, body) {
-    return APIClient._request(endpoint, 'PATCH', body);
+  static async patch(endpoint, body) {
+    await APIClient._request(endpoint, 'PATCH', body);
   }
 
-  static delete(endpoint) {
-    return APIClient._request(endpoint, 'DELETE');
+  static async delete(endpoint) {
+    await APIClient._request(endpoint, 'DELETE');
   }
 }
 

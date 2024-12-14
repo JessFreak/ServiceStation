@@ -1,14 +1,21 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom'
 import './MainPage.css';
 
 export const MainPage = () => {
+  const navigate = useNavigate();
+
+  const handleStartClick = () => {
+    navigate('/services');
+  };
+
   return (
     <div className="main-page">
       <div className="main-page__background"></div>
       <div className="main-page__text">
         <h1>Хто ми?</h1>
         <p>FixTrack: Ваш партнер у сфері автосервісу. <br /> Професійний підхід до кожного автомобіля.</p>
-        <button className="start-button">Розпочати</button>
+        <button className="start-button" onClick={handleStartClick}>Розпочати</button>
       </div>
       <div className="main-page__actions">
         <div className="action">

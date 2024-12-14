@@ -1,12 +1,16 @@
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 import './Header.css';
 
-const Header = () => {
+const Header = ({ setIsSignup }) => {
+  const handleSignupClick = () => setIsSignup(true);
+  const handleLoginClick = () => setIsSignup(false);
+
   return (
     <header className="header">
       <div className="header__logo">
         <NavLink to="/">
-          <img src={`${process.env.PUBLIC_URL}/favicon.png`} alt="logo"/>
+          <img src={`${process.env.PUBLIC_URL}/favicon.png`} alt="logo" />
         </NavLink>
         <NavLink to="/" className="header__title">
           <h1>FixTrack</h1>
@@ -21,8 +25,16 @@ const Header = () => {
         </NavLink>
       </nav>
       <div className="header__buttons">
-        <button className="button">Зареєструватись</button>
-        <button className="button">Увійти</button>
+        <NavLink to="/auth">
+          <button className="auth-button" onClick={handleSignupClick}>
+            Зареєструватись
+          </button>
+        </NavLink>
+        <NavLink to="/auth">
+          <button className="auth-button" onClick={handleLoginClick}>
+            Увійти
+          </button>
+        </NavLink>
       </div>
     </header>
   );

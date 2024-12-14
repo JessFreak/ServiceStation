@@ -22,9 +22,14 @@ export class AuthService {
   ) {}
 
   async register (user: RegisterDTO): Promise<User> {
-    const exist = await this.userRepository.findByEmail(user.email);
-    if (exist) {
+    const emailExist = await this.userRepository.findByEmail(user.email);
+    if (emailExist) {
       throw new AlreadyRegisteredException('User', 'email');
+    }
+
+    const phoneExist = await this.userRepository.findByPhone(user.phone);
+    if (phoneExist) {
+      throw new AlreadyRegisteredException('User', 'phone');
     }
 
     const hashedPassword = await hash(user.password, 10);
