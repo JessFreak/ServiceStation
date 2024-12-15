@@ -1,41 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import './Header.css';
-import axios from 'axios';
+import { useUser } from '../../context/UserContext';
+import { roleTranslations } from '../../utils';
 
 const Header = ({ setIsSignup }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userData, setUserData] = useState(null);
-  const navigate = useNavigate(); // Хук для навігації
-
-  useEffect(() => {
-    const token = document.cookie.includes('access_token');
-
-    if (token) setIsLoggedIn(true);
-
-    const fetchUserData = async () => {
-      try {
-        if (isLoggedIn) {
-          const response = await axios.get(`${process.env.REACT_APP_API_URL}/auth/me`, {
-            withCredentials: true,
-          });
-
-          setUserData(response.data);
-        }
-      } catch (error) {
-        console.error('Помилка при отриманні даних користувача:', error);
-      }
-    };
-
-    fetchUserData();
-  }, [isLoggedIn]);
+  const { user } = useUser();
+  const navigate = useNavigate();
 
   const handleSignupClick = () => setIsSignup(false);
   const handleLoginClick = () => setIsSignup(true);
 
-  const handleProfileClick = () => {
-    navigate('/profile');
-  };
+  const handleProfileClick = () => navigate('/profile');
 
   return (
     <header className="header">
@@ -48,21 +24,27 @@ const Header = ({ setIsSignup }) => {
         </NavLink>
       </div>
       <nav className="header__nav">
-        <NavLink to="/" className="header__nav-link" activeClassName="active">
+        <NavLink to="/" className="header__nav-link">
           Головна
         </NavLink>
-        <NavLink to="/services" className="header__nav-link" activeClassName="active">
+        <NavLink to="/services" className="header__nav-link">
           Послуги
         </NavLink>
       </nav>
-      {isLoggedIn && userData ? (
+      {user ? (
         <div className="header__user-info" onClick={handleProfileClick}>
           <div className="user-info__avatar">
-            <img src={userData.avatarUrl} alt="Avatar" />
+            <img
+              src={user.avatarUrl}
+              alt="Avatar"
+              onError={(e) => (e.target.src = `${process.env.PUBLIC_URL}/user.svg`)}
+            />
           </div>
           <div className="user-info__details">
-            <strong>{userData.name} {userData.surname}</strong>
-            <p className="user-info__role">{userData.role}</p>
+            <strong>
+              {user.name} {user.surname}
+            </strong>
+            <p className="user-info__role">{roleTranslations[user.role]}</p>
           </div>
         </div>
       ) : (

@@ -13,6 +13,7 @@ import { NotRegisteredException } from '../utils/exceptions/NotRegisteredExcepti
 import { PasswordRepeatException } from '../utils/exceptions/PasswordRepeatException';
 import { UpdatePasswordDto } from '../utils/dtos/ChangePasswordDTO';
 import { User } from '@prisma/client';
+import { UpdateUserDTO } from '../utils/dtos/UserDTO';
 
 @Injectable()
 export class AuthService {
@@ -22,15 +23,7 @@ export class AuthService {
   ) {}
 
   async register (user: RegisterDTO): Promise<User> {
-    const emailExist = await this.userRepository.findByEmail(user.email);
-    if (emailExist) {
-      throw new AlreadyRegisteredException('User', 'email');
-    }
-
-    const phoneExist = await this.userRepository.findByPhone(user.phone);
-    if (phoneExist) {
-      throw new AlreadyRegisteredException('User', 'phone');
-    }
+    await this.checkIfEmailOrPhoneExist(user);
 
     const hashedPassword = await hash(user.password, 10);
 
@@ -94,5 +87,17 @@ export class AuthService {
 
     const hashedPassword = await hash(newPassword, 10);
     await this.userRepository.updateById(userId, { password: hashedPassword });
+  }
+
+  async checkIfEmailOrPhoneExist({ email, phone }: UpdateUserDTO, userId?: string ): Promise<void> {
+    const emailExist = await this.userRepository.findByEmail(email);
+    if (emailExist && emailExist.id !== userId) {
+      throw new AlreadyRegisteredException('User', 'email');
+    }
+
+    const phoneExist = await this.userRepository.findByPhone(phone);
+    if (phoneExist && emailExist.id !== userId) {
+      throw new AlreadyRegisteredException('User', 'phone');
+    }
   }
 }

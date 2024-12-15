@@ -15,7 +15,7 @@ export const MainPage = () => {
       <div className="main-page__text">
         <h1>Хто ми?</h1>
         <p>FixTrack: Ваш партнер у сфері автосервісу. <br /> Професійний підхід до кожного автомобіля.</p>
-        <button className="start-button" onClick={handleStartClick}>Розпочати</button>
+        <button className="red-button" onClick={handleStartClick}>Розпочати</button>
       </div>
       <div className="main-page__actions">
         <div className="action">

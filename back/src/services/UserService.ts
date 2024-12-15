@@ -6,12 +6,14 @@ import { CreateVehicleDTO, UpdateVehicleDTO } from '../utils/dtos/VehicleDTO';
 import { NotBelongException } from '../utils/exceptions/NotBelongException';
 import { RoleDTO, UpdateUserDTO } from '../utils/dtos/UserDTO';
 import { AlreadyRegisteredException } from '../utils/exceptions/AlreadyRegisteredException';
+import { AuthService } from './AuthService';
 
 @Injectable()
 export class UserService {
   constructor (
     private readonly userRepository: UserRepository,
     private readonly vehicleRepository: VehicleRepository,
+    private readonly authService: AuthService,
   ) {}
 
   getAllUsers({ role }: RoleDTO): Promise<User[]> {
@@ -19,6 +21,7 @@ export class UserService {
   }
 
   async update (id: string, data: UpdateUserDTO): Promise<User> {
+    await this.authService.checkIfEmailOrPhoneExist(data, id);
     return this.userRepository.updateById(id, data);
   }
 

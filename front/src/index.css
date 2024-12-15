@@ -22,7 +22,7 @@
     cursor: pointer;
 }
 
-.start-button {
+.red-button {
     margin-top: 30px;
     background-color: rgba(137, 50, 64, 0.78);
     border: solid transparent;
@@ -44,7 +44,7 @@
     width: 100%;
 }
 
-.start-button:after {
+.red-button:after {
     background-clip: padding-box;
     background-color: rgba(137, 50, 64, 0.37);
     border: solid transparent;
@@ -59,21 +59,21 @@
     z-index: -1;
 }
 
-.start-button,
-.start-button:focus {
+.red-button,
+.red-button:focus {
     user-select: auto;
 }
 
-.start-button:hover:not(:disabled) {
+.red-button:hover:not(:disabled) {
     filter: brightness(1.1);
     -webkit-filter: brightness(1.1);
 }
 
-.start-button:disabled {
+.red-button:disabled {
     cursor: auto;
 }
 
-.start-button:active {
+.red-button:active {
     border-width: 4px 0 0;
     background: none;
 }
