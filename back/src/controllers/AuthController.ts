@@ -27,8 +27,8 @@ export class AuthController {
 
   @Get('google/callback')
   @UseGuards(GoogleOauthGuard)
-  googleAuthCallback (@UserRequest() user: User, @Res() res: Response): Response {
-    return this.authService.setToken(user.id, res);
+  googleAuthCallback (@UserRequest() user: User, @Res() res: Response): void {
+    this.authService.setToken(user.id, res);
   }
 
   @Post('register')
@@ -39,9 +39,9 @@ export class AuthController {
   }
 
   @Post('login')
-  async login (@Body() body: LoginDTO, @Res() res: Response): Promise<Response> {
+  async login (@Body() body: LoginDTO, @Res() res: Response): Promise<void> {
     const { id } = await this.authService.login(body);
-    return this.authService.setToken(id, res);
+    this.authService.setToken(id, res);
   }
 
   @Access()

@@ -13,7 +13,7 @@ const Auth = ({ initialSignup = true }) => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate(); // Використовуємо useNavigate
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsSignup(initialSignup);

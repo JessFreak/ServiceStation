@@ -1,8 +1,21 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import './Header.css';
 
 const Header = ({ setIsSignup }) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('access_token='))
+      ?.split('=')[1];
+
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
   const handleSignupClick = () => setIsSignup(true);
   const handleLoginClick = () => setIsSignup(false);
 
@@ -24,18 +37,20 @@ const Header = ({ setIsSignup }) => {
           Послуги
         </NavLink>
       </nav>
-      <div className="header__buttons">
-        <NavLink to="/auth">
-          <button className="auth-button" onClick={handleSignupClick}>
-            Зареєструватись
-          </button>
-        </NavLink>
-        <NavLink to="/auth">
-          <button className="auth-button" onClick={handleLoginClick}>
-            Увійти
-          </button>
-        </NavLink>
-      </div>
+      {!isLoggedIn && (
+        <div className="header__buttons">
+          <NavLink to="/auth">
+            <button className="auth-button" onClick={handleSignupClick}>
+              Зареєструватись
+            </button>
+          </NavLink>
+          <NavLink to="/auth">
+            <button className="auth-button" onClick={handleLoginClick}>
+              Увійти
+            </button>
+          </NavLink>
+        </div>
+      )}
     </header>
   );
 };

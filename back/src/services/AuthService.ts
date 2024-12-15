@@ -61,13 +61,13 @@ export class AuthService {
     return this.userRepository.create(googleUser);
   }
 
-  setToken (userId: string, res: Response): Response {
+  setToken (userId: string, res: Response): void {
     const token = this.jwtService.sign({
       sub: userId,
     });
 
     res.cookie('access_token', token);
-    return res.status(200).json();
+    res.redirect('http://localhost:3000/');
   }
 
   logout(res: Response): Response {
