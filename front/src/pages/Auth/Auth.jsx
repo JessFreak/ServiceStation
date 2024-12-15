@@ -6,8 +6,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import { useNavigate } from 'react-router-dom'; // Додаємо імпорт useNavigate
 import 'react-toastify/dist/ReactToastify.css';
 
-const Auth = ({ initialSignup = true }) => {
-  const [isSignup, setIsSignup] = useState(initialSignup);
+const Auth = ({ isSignup, setIsSignup }) => {
   const [name, setName] = useState('');
   const [surname, setSurname] = useState('');
   const [email, setEmail] = useState('');
@@ -16,8 +15,8 @@ const Auth = ({ initialSignup = true }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setIsSignup(initialSignup);
-  }, [initialSignup]);
+    setIsSignup(isSignup);
+  }, [isSignup]);
 
   const toggleForm = () => {
     setIsSignup(!isSignup);

@@ -16,8 +16,8 @@ const Header = ({ setIsSignup }) => {
     }
   }, []);
 
-  const handleSignupClick = () => setIsSignup(true);
-  const handleLoginClick = () => setIsSignup(false);
+  const handleSignupClick = () => setIsSignup(false);
+  const handleLoginClick = () => setIsSignup(true);
 
   return (
     <header className="header">

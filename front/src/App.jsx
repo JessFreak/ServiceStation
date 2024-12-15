@@ -15,7 +15,7 @@ function App() {
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/services" element={<Services />} />
-        <Route path="/auth" element={<Auth initialSignup={isSignup}/>} />
+        <Route path="/auth" element={<Auth isSignup={isSignup} setIsSignup={setIsSignup} />} />
       </Routes>
       <ToastContainer />
     </Router>
