@@ -39,9 +39,11 @@ export class AuthController {
   }
 
   @Post('login')
-  async login (@Body() body: LoginDTO, @Res() res: Response): Promise<void> {
+  async login (@Body() body: LoginDTO) {
     const { id } = await this.authService.login(body);
-    this.authService.setToken(id, res);
+    const token = this.authService.getToken(id);
+
+    return { token };
   }
 
   @Access()

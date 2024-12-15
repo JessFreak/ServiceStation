@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './Services.css';
-import APIClient from '../../api/client';
+import axios from 'axios';
 
 export const Services = () => {
   const [services, setServices] = useState([]);
@@ -11,8 +11,8 @@ export const Services = () => {
     const fetchServices = async () => {
       try {
         setLoading(true);
-        const data = await APIClient.get('/services');
-        setServices(data);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/services`);
+        setServices(response.data);
       } catch (err) {
         console.error('Error fetching services:', err);
         setError('Не вдалося завантажити послуги');

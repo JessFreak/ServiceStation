@@ -45,6 +45,10 @@ export class AuthService {
     if (!isPasswordsMatch) throw new BadRequestException('Invalid password');
   }
 
+  getToken (userId: string): string {
+    return this.jwtService.sign({ sub: userId });
+  }
+
   async login ({ email, password }: LoginDTO): Promise<{ id: string }> {
     const user = await this.userRepository.findByEmail(email);
     if (!user) throw new NotRegisteredException();
@@ -61,7 +65,7 @@ export class AuthService {
     return this.userRepository.create(googleUser);
   }
 
-  setToken (userId: string, res: Response): void {
+  setToken(userId: string, res: Response) {
     const token = this.jwtService.sign({
       sub: userId,
     });

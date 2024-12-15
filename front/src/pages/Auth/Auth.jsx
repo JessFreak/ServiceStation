@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './Auth.css';
 import GoogleLogo from './GoogleLogo.svg';
-import APIClient from '../../api/client';
+import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
-import { useNavigate } from 'react-router-dom'; // Додаємо імпорт useNavigate
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 
 const Auth = ({ isSignup, setIsSignup }) => {
   const [name, setName] = useState('');
@@ -23,12 +23,7 @@ const Auth = ({ isSignup, setIsSignup }) => {
   };
 
   const handleGoogleLogin = async () => {
-    try {
-      window.location.href = `${process.env.REACT_APP_API_URL}/auth/google`;
-      toast.success('Google login initiated!', { type: 'success', position: 'bottom-right' });
-    } catch (error) {
-      toast.error(`Google login failed: ${error.message}`, { type: 'error', position: 'bottom-right' });
-    }
+    window.location.href = `${process.env.REACT_APP_API_URL}/auth/google`;
   };
 
   const handleSignupSubmit = async (e) => {
@@ -37,11 +32,11 @@ const Auth = ({ isSignup, setIsSignup }) => {
     const userData = { name, surname, email, phone, password };
 
     try {
-      await APIClient.post('/auth/register', userData);
+      await axios.post(`${process.env.REACT_APP_API_URL}/auth/register`, userData);
       toggleForm();
       toast.success('Реєстрація успішна. Ви можете увійти.', { type: 'success', position: 'bottom-right' });
     } catch (error) {
-      toast.error(`Registration failed: ${error.message}`, { type: 'error', position: 'bottom-right' });
+      toast.error(`Помилка реєстрації: ${error.response?.data?.message || error.message}`, { type: 'error', position: 'bottom-right' });
     }
   };
 
@@ -51,11 +46,13 @@ const Auth = ({ isSignup, setIsSignup }) => {
     const loginData = { email, password };
 
     try {
-      await APIClient.post('/auth/login', loginData);
-      toast.success('Вхід успішний!', { type: 'success', position: 'bottom-right' });
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, loginData);
+      const { token } = response.data;
+      document.cookie = `access_token=${token};`;
       navigate('/');
+      window.location.reload();
     } catch (error) {
-      toast.error(`Login failed: ${error.message}`, { type: 'error', position: 'bottom-right' });
+      toast.error(`Помилка авторизації: ${error.response?.data?.message || error.message}`, { type: 'error', position: 'bottom-right' });
     }
   };
 

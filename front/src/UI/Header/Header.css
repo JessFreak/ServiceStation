@@ -41,3 +41,46 @@
   display: flex;
   gap: 20px;
 }
+
+.header__user-info {
+  display: flex;
+  align-items: center;
+  background-color: #f1f1f1; /* Світлий фон */
+  padding: 10px 15px;
+  border-radius: 5px; /* Закруглені кути */
+  cursor: pointer; /* Курсор як у кнопки */
+  transition: background-color 0.3s ease; /* Плавна зміна фону при наведенні */
+}
+
+.header__user-info:hover {
+  background-color: #e0e0e0; /* Зміна фону при наведенні */
+}
+
+.user-info__avatar {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  border-radius: 50%; /* Кругла аватарка */
+  overflow: hidden;
+}
+
+.user-info__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Підгонка зображення по розміру */
+}
+
+.user-info__details {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-info__details strong {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.user-info__role {
+  font-size: 12px;
+  color: #555;
+}
