@@ -89,7 +89,7 @@ label {
     transition: .5s ease-in-out;
 }
 
-input {
+.form-input {
     width: 60%;
     height: 10px;
     background: #e0dede;

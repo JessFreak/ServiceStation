@@ -44,7 +44,7 @@ const General = () => {
       );
 
       setUserData((prevData) => ({ ...prevData, avatarUrl: response.data.data.url }));
-      toast.success('Файл завантажено успішно. Збережіть зміни.', {
+      toast.success('Файл завантажено успішно. Збережіть зміни.', {
         position: 'bottom-right',
       });
     } catch (error) {

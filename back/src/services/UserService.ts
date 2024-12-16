@@ -42,6 +42,11 @@ export class UserService {
       throw new NotBelongException('Vehicle', 'User');
     }
 
+    const vehicleWithVin = await this.vehicleRepository.find({ vin: data.vin });
+    if (vehicleWithVin && vehicleWithVin.id !== vehicleId) {
+      throw new AlreadyRegisteredException('Vehicle', 'VIN');
+    }
+
     return this.vehicleRepository.updateById(vehicleId, data);
   }
 }

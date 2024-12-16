@@ -43,6 +43,7 @@
 
 .save-button {
     width: 40%;
+    min-width: fit-content;
 }
 
 .avatar-section {

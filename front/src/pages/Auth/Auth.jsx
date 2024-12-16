@@ -64,6 +64,7 @@ const Auth = ({ isSignup, setIsSignup }) => {
           <form onSubmit={handleSignupSubmit}>
             <label htmlFor="chk" aria-hidden="true">Реєстрація</label>
             <input
+              className='form-input'
               type="text"
               name="name"
               placeholder="Ім'я"
@@ -72,6 +73,7 @@ const Auth = ({ isSignup, setIsSignup }) => {
               required
             />
             <input
+              className='form-input'
               type="text"
               name="surname"
               placeholder="Прізвище"
@@ -80,14 +82,16 @@ const Auth = ({ isSignup, setIsSignup }) => {
               required
             />
             <input
+              className='form-input'
               type="email"
               name="email"
-              placeholder="Email"
+              placeholder="email@gmail.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
             <input
+              className='form-input'
               type="text"
               name="phone"
               placeholder="Телефон"
@@ -96,6 +100,7 @@ const Auth = ({ isSignup, setIsSignup }) => {
               required
             />
             <input
+              className='form-input'
               type="password"
               name="password"
               placeholder="Пароль"
@@ -116,14 +121,16 @@ const Auth = ({ isSignup, setIsSignup }) => {
           <form onSubmit={handleLoginSubmit}>
             <label htmlFor="chk" aria-hidden="true">Вхід</label>
             <input
+              className='form-input'
               type="email"
               name="email"
-              placeholder="Email"
+              placeholder="email@gmail.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
             <input
+              className='form-input'
               type="password"
               name="password"
               placeholder="Пароль"

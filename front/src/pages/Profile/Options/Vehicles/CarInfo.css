@@ -1,0 +1,21 @@
+.vehicle-info {
+    background-color: rgba(128, 126, 126, 0.62);
+    display: grid;
+    gap: 20px;
+    width: fit-content;
+    height: 44vh;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.vehicle-info div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.vehicle-info input, .vehicle-info ul, .vehicle-info li {
+    font-size: 18px;
+    border-radius: 6px;
+    border: 0;
+}

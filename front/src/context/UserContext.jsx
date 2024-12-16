@@ -7,11 +7,9 @@ export const useUser = () => useContext(UserContext);
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const token = document.cookie.includes('access_token');
-    setIsLoggedIn(token);
 
     const fetchUserData = async () => {
       try {
@@ -22,8 +20,7 @@ export const UserProvider = ({ children }) => {
           setUser(response.data);
         }
       } catch (error) {
-        console.error('Помилка при отриманні даних користувача:', error);
-        setIsLoggedIn(false);
+        document.cookie = '';
       }
     };
 

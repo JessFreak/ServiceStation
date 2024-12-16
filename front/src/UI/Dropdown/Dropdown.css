@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css?family=Arvo&display=swap');
+
+.dropdown {
+    font-size: 16px;
+}
+
+.dropdown ul li {
+    list-style: none;
+    margin: 0 auto;
+    border-left: 2px solid #3ca0e7;
+    display: inline-block;
+    padding: 0 30px;
+    position: relative;
+    text-decoration: none;
+    font-family: 'Arvo', sans-serif;
+    background-color: white;
+    width: 100%;
+}
+
+.dropdown li a {
+    color: #2c3e50;
+}
+
+.dropdown li a:hover {
+    color: #3ca0e7;
+}
+
+.dropdown li:hover {
+    cursor: pointer;
+}
+
+.dropdown ul li ul {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    padding-left: 0;
+    left: 0;
+    display: none;
+    background: white;
+}
+
+.dropdown ul li:hover > ul,
+.dropdown ul li ul:hover {
+    visibility: visible;
+    opacity: 1;
+    display: block;
+    text-align: left;
+    padding-top: 20px;
+    box-shadow: 0 3px 5px -1px #ccc;
+}
+
+.dropdown ul li ul li {
+    clear: both;
+    width: 100%;
+    text-align: left;
+    margin-bottom: 20px;
+    border-style: none;
+}
+
+.dropdown ul li ul li a:hover {
+    padding-left: 10px;
+    border-left: 2px solid #3ca0e7;
+    transition: all 0.3s ease;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    color: #3CA0E7;
+}
+
+.dropdown ul li ul li a {
+    transition: all 0.5s ease;
+}

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import './Profile.css';
 import Sidebar from '../../UI/Sidebar/Sidebar';
 import General from './Options/General';
-import Vehicles from './Options/Vehicles';
+import Vehicles from './Options/Vehicles/Vehicles';
 import History from './Options/History';
 import Settings from './Options/Settings';
 
