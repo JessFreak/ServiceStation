@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { Access } from '../config/security/decorators/Access';
 import { UserRequest } from '../config/security/decorators/UserRequest';
 import { Role, Vehicle } from '@prisma/client';
@@ -63,6 +63,15 @@ export class UsersController {
     @Body() body: UpdateVehicleDTO,
   ): Promise<Vehicle> {
     return this.userService.updateVehicle(user.id, vehicleId, body);
+  }
+
+  @Delete('vehicles/:vehicleId')
+  @Access()
+  deleteVehicle (
+    @UserRequest() user: UserResponse,
+    @Param('vehicleId', VehicleByIdPipe) vehicleId: string,
+  ): Promise<Vehicle> {
+    return this.userService.deleteVehicle(user.id, vehicleId);
   }
 
   @Get('orders')

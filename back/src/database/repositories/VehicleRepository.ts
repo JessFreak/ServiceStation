@@ -25,4 +25,8 @@ export class VehicleRepository {
   async updateById (id: string, data: Prisma.VehicleUncheckedUpdateInput): Promise<Vehicle> {
     return this.prisma.vehicle.update({ where: { id: id }, data });
   }
+
+  async deleteById (id: string): Promise<Vehicle> {
+    return this.prisma.vehicle.delete({ where: { id } });
+  }
 }

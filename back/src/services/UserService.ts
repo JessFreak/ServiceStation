@@ -49,4 +49,13 @@ export class UserService {
 
     return this.vehicleRepository.updateById(vehicleId, data);
   }
+
+  async deleteVehicle (id: string, vehicleId: string): Promise<Vehicle> {
+    const vehicle = await this.vehicleRepository.deleteById(vehicleId);
+    if (id !== vehicle.userId) {
+      throw new NotBelongException('Vehicle', 'User');
+    }
+
+    return this.vehicleRepository.deleteById(vehicleId);
+  }
 }
