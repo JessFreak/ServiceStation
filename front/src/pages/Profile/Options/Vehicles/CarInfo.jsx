@@ -47,6 +47,20 @@ function CarInfo({ initial, onVehicleUpdate, setNewVehicle }) {
     }
   };
 
+  const handleDelete = async () => {
+    if (!carData.id) return;
+
+    try {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/users/vehicles/${initial.id}`, { withCredentials: true });
+      toast.success('Транспорт видалено успішно.', { position: 'bottom-right' });
+      onVehicleUpdate(null); // Оновлює список після видалення
+      setNewVehicle(false); // Закриває форму
+    } catch (error) {
+      const errorMessage = error.response?.data?.message;
+      toast.error(errorMessage, { position: 'bottom-right' });
+    }
+  };
+
   return (
     <form className='vehicle-info' onSubmit={handleSubmit}>
       <div>
@@ -65,7 +79,7 @@ function CarInfo({ initial, onVehicleUpdate, setNewVehicle }) {
           id="year"
           min={1885}
           max={2024}
-          placeholder="Рік випуску"
+          placeholder="Рік"
           value={carData.year}
           onChange={handleChange}
           required
@@ -96,12 +110,23 @@ function CarInfo({ initial, onVehicleUpdate, setNewVehicle }) {
           required
         />
       </div>
-      <button
-        type="submit"
-        className="red-button save-button"
-      >
-        Зберегти
-      </button>
+      <div className="button-group">
+        <button
+          type="submit"
+          className="red-button save-button"
+        >
+          Зберегти
+        </button>
+        {carData.id && (
+          <button
+            type="button"
+            className="red-button delete-button"
+            onClick={handleDelete}
+          >
+            <i className="bx bx-trash"></i>
+          </button>
+        )}
+      </div>
     </form>
   );
 }

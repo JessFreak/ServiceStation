@@ -51,7 +51,7 @@ export class UserService {
   }
 
   async deleteVehicle (id: string, vehicleId: string): Promise<Vehicle> {
-    const vehicle = await this.vehicleRepository.deleteById(vehicleId);
+    const vehicle = await this.vehicleRepository.findById(vehicleId);
     if (id !== vehicle.userId) {
       throw new NotBelongException('Vehicle', 'User');
     }

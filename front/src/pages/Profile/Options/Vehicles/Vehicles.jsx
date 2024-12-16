@@ -8,25 +8,25 @@ const Vehicles = () => {
   const [loading, setLoading] = useState(true);
   const [newVehicle, setNewVehicle] = useState(null);
 
-  useEffect(() => {
-    const getVehicles = async () => {
-      try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/users/vehicles`, {
-          withCredentials: true,
-        });
-        setVehicles(response.data);
-      } catch (error) {
-        console.error('Помилка при отриманні транспортних засобів:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const getVehicles = async () => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/users/vehicles`, {
+        withCredentials: true,
+      });
+      setVehicles(response.data);
+    } catch (error) {
+      console.error('Помилка при отриманні транспортних засобів:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     getVehicles();
   }, []);
 
-  const handleUpdateVehicles = (vehicle) => {
-    setVehicles([...vehicles, vehicle]);
+  const handleUpdateVehicles = () => {
+    getVehicles();
   };
 
   const handleAddVehicle = () => {
@@ -42,10 +42,6 @@ const Vehicles = () => {
     return <h1>Завантаження...</h1>;
   }
 
-  if (!vehicles.length && !newVehicle) {
-    return <h1>У вас ще немає транспортних засобів.</h1>;
-  }
-
   return (
     <div className="vehicles">
       <div className="vehicles-header">
@@ -55,6 +51,9 @@ const Vehicles = () => {
         </button>
       </div>
       <div className="vehicles-list">
+        {vehicles.length === 0 && !newVehicle && (
+          <h1>У вас ще немає транспортних засобів.</h1>
+        )}
         {vehicles.map((vehicle) => (
           <CarInfo
             key={vehicle.id}
@@ -62,8 +61,9 @@ const Vehicles = () => {
             onVehicleUpdate={handleUpdateVehicles}
           />
         ))}
-        {newVehicle &&
-          <CarInfo initial={newVehicle} onVehicleUpdate={handleUpdateVehicles} setNewVehicle={setNewVehicle}/>}
+        {newVehicle && (
+          <CarInfo initial={newVehicle} onVehicleUpdate={handleUpdateVehicles} setNewVehicle={setNewVehicle} />
+        )}
       </div>
     </div>
   );

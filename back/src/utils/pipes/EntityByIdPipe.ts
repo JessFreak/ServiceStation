@@ -6,7 +6,7 @@ export class EntityByIdPipe implements PipeTransform<string, Promise<string>> {
 
   async transform (id: string): Promise<string> {
     const entity = await this.repository.findById(id);
-
+    console.log(id);
     if (!entity) {
       throw new InvalidEntityIdException(this.name);
     }
