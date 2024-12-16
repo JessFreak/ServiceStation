@@ -1,0 +1,91 @@
+.filterable-multi-select {
+    position: relative;
+    width: 300px;
+    height: fit-content;
+    margin-top: 5px;
+}
+
+.filterable-multi-select * {
+    color: rgba(44, 62, 80, 0.82);
+}
+
+.select-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    background: #fff;
+}
+
+.selected-items {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dropdown-icon {
+    margin-left: 10px;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+
+.search-box {
+    padding: 8px;
+    border-bottom: 1px solid #ccc;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.options-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.option-item {
+    padding: 8px 10px;
+    cursor: pointer;
+    font-size: 10px;
+    height: fit-content;
+}
+
+.option-item label {
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.option-item input {
+    margin-right: 8px;
+}
+
+.option-item:hover {
+    background-color: #f0f0f0;
+}
+
+.no-options {
+    padding: 8px;
+    text-align: center;
+    color: #999;
+}

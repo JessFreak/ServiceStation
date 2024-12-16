@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import './Profile.css';
-import Sidebar from '../../UI/Sidebar/Sidebar';
+import Sidebar from '@UI/Sidebar/Sidebar';
 import General from './Options/General';
 import Vehicles from './Options/Vehicles/Vehicles';
-import History from './Options/History';
+import History from './Options/OrderHistory/OrderHistory';
 import Settings from './Options/Settings';
 
 const Profile = () => {

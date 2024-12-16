@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { useUser } from '../../../context/UserContext';
+import { useUser } from '@/context/UserContext';
 
 const General = () => {
   const { user, setUser } = useUser();
@@ -73,10 +73,9 @@ const General = () => {
 
   return (
     <>
-      <h2 className="profile-title">Ваш профіль</h2>
+      <h1 className="profile-title">Дані профілю</h1>
       <div className="profile-card">
         <div className="profile-section">
-          <h3>Загальне</h3>
           <div className="input-container">
             <label htmlFor="name">Ім'я</label>
             <input

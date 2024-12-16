@@ -1,4 +1,4 @@
-import { IsArray, IsUUID, IsNotEmpty, IsEnum, IsOptional } from 'class-validator';
+import { IsArray, IsUUID, IsNotEmpty, IsEnum, IsOptional, IsDateString } from 'class-validator';
 import { Status } from '@prisma/client';
 import { IsValidOrderDate } from './decorators/IsValidOrderDate';
 import { IntersectionType } from '@nestjs/swagger';
@@ -44,4 +44,12 @@ export class OrderQueryDTO extends PartialType(IntersectionType(WorkerDTO, Statu
   @IsOptional()
   @IsUUID()
   serviceId?: string;
+
+  @IsOptional()
+  @IsUUID()
+  vehicleId?: string;
+
+  @IsOptional()
+  @IsDateString()
+  orderDay?: string;
 }

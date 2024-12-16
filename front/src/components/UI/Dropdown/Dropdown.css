@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Arvo&display=swap');
 
-.dropdown {
-    font-size: 16px;
+.dropdown * {
+    font-size: 18px;
 }
 
 .dropdown ul li {
@@ -15,14 +15,22 @@
     font-family: 'Arvo', sans-serif;
     background-color: white;
     width: 100%;
+    min-width: 200px;
 }
 
-.dropdown li a {
+.dropdown li button {
     color: #2c3e50;
+    display: block;
+    background: none;
+    border: none;
+    padding: 0;
+    text-align: left;
+    width: 100%;
 }
 
-.dropdown li a:hover {
+.dropdown li button:hover {
     color: #3ca0e7;
+    cursor: pointer;
 }
 
 .dropdown li:hover {
@@ -57,7 +65,7 @@
     border-style: none;
 }
 
-.dropdown ul li ul li a:hover {
+.dropdown ul li ul li button:hover {
     padding-left: 10px;
     border-left: 2px solid #3ca0e7;
     transition: all 0.3s ease;
@@ -71,6 +79,6 @@ a:hover {
     color: #3CA0E7;
 }
 
-.dropdown ul li ul li a {
+.dropdown ul li ul li button {
     transition: all 0.5s ease;
 }

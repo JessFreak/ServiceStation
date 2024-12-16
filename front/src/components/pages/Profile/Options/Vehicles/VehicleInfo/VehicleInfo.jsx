@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import Dropdown from '../../../../UI/Dropdown/Dropdown';
-import axios from 'axios';
+import Dropdown from '@UI/Dropdown/Dropdown';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './CarInfo.css';
+import './VehicleInfo.css';
+import { axiosInstance } from '@/utils';
 
-function CarInfo({ initial, onVehicleUpdate, setNewVehicle }) {
+function VehicleInfo({ initial, onVehicleUpdate, setNewVehicle }) {
   const [carData, setCarData] = useState(initial);
   const [active, setActive] = useState(initial.type);
 
@@ -21,43 +21,45 @@ function CarInfo({ initial, onVehicleUpdate, setNewVehicle }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    if (!active) {
+      toast.error('Виберіть тип транспорту.');
+      return;
+    }
+
     try {
       let response;
       if (carData.id) {
-        response = await axios.patch(`${process.env.REACT_APP_API_URL}/users/vehicles/${carData.id}`, {
+        response = await axiosInstance.patch(`users/vehicles/${carData.id}`, {
           ...carData,
           type: active,
-        }, { withCredentials: true });
-        toast.success('Транспорт оновлено успішно.', { position: 'bottom-right' });
+        });
+        toast.success('Транспорт оновлено успішно.');
       } else {
-        response = await axios.post(`${process.env.REACT_APP_API_URL}/users/vehicles`, {
+        response = await axiosInstance.post('users/vehicles', {
           ...carData,
           type: active,
-        }, { withCredentials: true });
-        onVehicleUpdate(response.data);
-        setNewVehicle(false);
-        toast.success('Транспорт додано успішно.', { position: 'bottom-right' });
+        });
+        onVehicleUpdate();
+        setNewVehicle(null);
+        toast.success('Транспорт додано успішно.');
       }
-
       setCarData(response.data);
-
+      onVehicleUpdate(response.data);
     } catch (error) {
-      const errorMessage = error.response?.data?.message;
-      toast.error(errorMessage, { position: 'bottom-right' });
+      toast.error(error.response.data.message);
     }
   };
 
   const handleDelete = async () => {
-    if (!carData.id) return;
+    if (!initial.id) return;
 
     try {
-      await axios.delete(`${process.env.REACT_APP_API_URL}/users/vehicles/${initial.id}`, { withCredentials: true });
-      toast.success('Транспорт видалено успішно.', { position: 'bottom-right' });
-      onVehicleUpdate(null); // Оновлює список після видалення
-      setNewVehicle(false); // Закриває форму
+      await axiosInstance.delete(`users/vehicles/${carData.id}`);
+      toast.success('Транспорт видалено успішно.');
+      onVehicleUpdate(null);
+      setNewVehicle(false);
     } catch (error) {
-      const errorMessage = error.response?.data?.message;
-      toast.error(errorMessage, { position: 'bottom-right' });
+      toast.error(error.response?.data.message);
     }
   };
 
@@ -66,9 +68,10 @@ function CarInfo({ initial, onVehicleUpdate, setNewVehicle }) {
       <div>
         <i className="bx bx-car"></i>
         <Dropdown
-          menuItems={menuItems}
+          options={menuItems}
           active={active}
           setActive={setActive}
+          placeholder='Тип транспорту'
         />
       </div>
       <div>
@@ -120,7 +123,7 @@ function CarInfo({ initial, onVehicleUpdate, setNewVehicle }) {
         {carData.id && (
           <button
             type="button"
-            className="red-button delete-button"
+            className="service-button save-button"
             onClick={handleDelete}
           >
             <i className="bx bx-trash"></i>
@@ -131,4 +134,4 @@ function CarInfo({ initial, onVehicleUpdate, setNewVehicle }) {
   );
 }
 
-export default CarInfo;
+export default VehicleInfo;

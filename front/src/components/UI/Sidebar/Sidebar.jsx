@@ -6,14 +6,14 @@ const Sidebar = ({ options, active, setActive }) => {
       <ul className="nav-links">
         {options.map((option) => (
           <li key={option.name}>
-            <a
-              href="#"
+            <button
+              type="button"
               className={active === option.name ? 'active' : ''}
               onClick={() => setActive(option.name)}
             >
-              <i className={`bx ${option.icon}`}> </i>
+              <i className={`bx ${option.icon}`}></i>
               <span className="link_name">{option.name}</span>
-            </a>
+            </button>
           </li>
         ))}
       </ul>

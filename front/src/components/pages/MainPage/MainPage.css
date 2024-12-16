@@ -10,7 +10,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: url('../../../public/main-page.png') no-repeat center center fixed;
+    background: url('../../../../public/main-page.png') no-repeat center fixed;
     background-size: cover;
     filter: blur(3px);
     z-index: -1;
@@ -24,7 +24,7 @@
     color: white;
     text-align: center;
     background-color: rgba(44, 62, 80, 0.5);
-    padding: 40px;
+    padding: 30px;
     border-radius: 10px;
 }
 

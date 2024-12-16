@@ -1,8 +1,8 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import './Header.css';
-import { useUser } from '../../context/UserContext';
-import { roleTranslations } from '../../utils';
+import { useUser } from '@/context/UserContext';
+import { roleTranslations } from '@/utils';
 
 const Header = ({ setIsSignup }) => {
   const { user } = useUser();

@@ -11,7 +11,7 @@ export class VehicleRepository {
   }
 
   async findMany (where: Prisma.VehicleWhereInput): Promise<Vehicle[]> {
-    return this.prisma.vehicle.findMany({ where });
+    return this.prisma.vehicle.findMany({ where, orderBy: { year: 'desc' } });
   }
 
   async findById (id: string): Promise<Vehicle> {

@@ -6,6 +6,7 @@ import { NoAvailableWorkerException } from '../utils/exceptions/NoAvailableWorke
 import { Role, Status } from '@prisma/client';
 import { Worker } from '../database/entities/Worker';
 import { OrderDB } from '../database/entities/OrderDB';
+import { NotBelongException } from '../utils/exceptions/NotBelongException';
 
 @Injectable()
 export class OrderService {
@@ -14,7 +15,7 @@ export class OrderService {
     private readonly userRepository: UserRepository,
   ) {}
 
-  async create (data: CreateOrderDTO):Promise<OrderDB> {
+  async create (data: CreateOrderDTO): Promise<OrderDB> {
     const worker = await this.findAvailableWorker(data.orderDate);
     if (!worker) throw new NoAvailableWorkerException();
 
@@ -37,7 +38,11 @@ export class OrderService {
         workingOrders: {
           none: {
             orderDate: {
-              equals: orderDate,
+              gte: new Date(new Date(orderDate).setHours(new Date(orderDate).getHours() - 1)),
+              lte: new Date(new Date(orderDate).setHours(new Date(orderDate).getHours() + 1)),
+            },
+            status: {
+              notIn: [Status.DONE, Status.CANCELED],
             },
           },
         },
@@ -56,8 +61,12 @@ export class OrderService {
     });
   }
 
-  async getAll ({ workerId, userId, status, serviceId }: OrderQueryDTO) {
+  async getAll ({ workerId, userId, status, serviceId, vehicleId, orderDay }: OrderQueryDTO) {
+    const day = orderDay ? new Date(`${orderDay}T00:00:00.000Z`) : null;
+    const nextDay = orderDay ? new Date(`${orderDay}T23:59:59.999Z`) : null;
+
     return this.orderRepository.findMany({
+      vehicleId,
       workerId,
       vehicle: {
         userId,
@@ -67,15 +76,25 @@ export class OrderService {
         some: {
           serviceId,
         }
-      }
+      },
+      orderDate: day ? { gte: day, lte: nextDay } : undefined,
     });
   }
 
-  async updateWorker (id: string, workerId: string):Promise<OrderDB> {
+  async updateWorker (id: string, workerId: string): Promise<OrderDB> {
     return this.orderRepository.updateById(id, { workerId });
   }
 
-  async updateStatus (id: string, status: Status):Promise<OrderDB> {
+  async updateStatus (id: string, status: Status): Promise<OrderDB> {
     return this.orderRepository.updateById(id, { status });
+  }
+
+  async cancel (userId: string, id: string): Promise<OrderDB> {
+    const order = await this.orderRepository.findById(id);
+    if (order.vehicle.userId !== userId) {
+      throw new NotBelongException('Order', 'User');
+    }
+
+    return this.orderRepository.updateById(id, { status: Status.CANCELED });
   }
 }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
-import CarInfo from './CarInfo';
+import VehicleInfo from './VehicleInfo/VehicleInfo';
 import './Vehicles.css';
+import { axiosInstance } from '@/utils';
 
 const Vehicles = () => {
   const [vehicles, setVehicles] = useState([]);
@@ -10,12 +10,8 @@ const Vehicles = () => {
 
   const getVehicles = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/users/vehicles`, {
-        withCredentials: true,
-      });
+      const response = await axiosInstance.get('users/vehicles');
       setVehicles(response.data);
-    } catch (error) {
-      console.error('Помилка при отриманні транспортних засобів:', error);
     } finally {
       setLoading(false);
     }
@@ -25,7 +21,11 @@ const Vehicles = () => {
     getVehicles();
   }, []);
 
-  const handleUpdateVehicles = () => {
+  const handleUpdateVehicles = (updatedVehicle = null) => {
+    if (updatedVehicle === null && newVehicle) {
+      setNewVehicle(null);
+      return;
+    }
     getVehicles();
   };
 
@@ -55,14 +55,18 @@ const Vehicles = () => {
           <h1>У вас ще немає транспортних засобів.</h1>
         )}
         {vehicles.map((vehicle) => (
-          <CarInfo
+          <VehicleInfo
             key={vehicle.id}
             initial={vehicle}
             onVehicleUpdate={handleUpdateVehicles}
           />
         ))}
         {newVehicle && (
-          <CarInfo initial={newVehicle} onVehicleUpdate={handleUpdateVehicles} setNewVehicle={setNewVehicle} />
+          <VehicleInfo
+            initial={newVehicle}
+            onVehicleUpdate={handleUpdateVehicles}
+            setNewVehicle={setNewVehicle}
+          />
         )}
       </div>
     </div>

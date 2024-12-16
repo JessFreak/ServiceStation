@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Auth.css';
 import GoogleLogo from './GoogleLogo.svg';
-import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
+import { axiosInstance } from '@/utils';
 
 const Auth = ({ isSignup, setIsSignup }) => {
   const [name, setName] = useState('');
@@ -16,7 +16,7 @@ const Auth = ({ isSignup, setIsSignup }) => {
 
   useEffect(() => {
     setIsSignup(isSignup);
-  }, [isSignup]);
+  }, [isSignup, setIsSignup]);
 
   const toggleForm = () => {
     setIsSignup(!isSignup);
@@ -32,11 +32,11 @@ const Auth = ({ isSignup, setIsSignup }) => {
     const userData = { name, surname, email, phone, password };
 
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/auth/register`, userData);
+      await axiosInstance.post('auth/register', userData);
       toggleForm();
-      toast.success('Реєстрація успішна. Ви можете увійти.', { type: 'success', position: 'bottom-right' });
+      toast.success('Реєстрація успішна. Ви можете увійти.');
     } catch (error) {
-      toast.error(`Помилка реєстрації: ${error.response?.data?.message || error.message}`, { type: 'error', position: 'bottom-right' });
+      toast.error(error.response.data.message);
     }
   };
 
@@ -46,13 +46,13 @@ const Auth = ({ isSignup, setIsSignup }) => {
     const loginData = { email, password };
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, loginData);
+      const response = await axiosInstance.post('auth/login', loginData);
       const { token } = response.data;
       document.cookie = `access_token=${token};`;
       navigate('/');
       window.location.reload();
     } catch (error) {
-      toast.error(`Помилка авторизації: ${error.response?.data?.message || error.message}`, { type: 'error', position: 'bottom-right' });
+      toast.error(error.response?.data?.message);
     }
   };
 

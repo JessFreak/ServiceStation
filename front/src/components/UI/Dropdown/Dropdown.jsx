@@ -1,27 +1,29 @@
 import React from 'react';
 import './Dropdown.css';
 
-const Dropdown = ({ menuItems, active, setActive }) => {
+const Dropdown = ({ options, active, setActive, placeholder = 'Обери опцію' }) => {
   const handleItemClick = (e, itemName) => {
     e.preventDefault();
-    setActive(itemName);
+    setActive(active === itemName ? null : itemName);
   };
 
   return (
-    <nav role="navigation" className="dropdown">
+    <nav className="dropdown">
       <ul>
         <li>
-          <a href="#">{active}</a>
-          <ul className="dropdown">
-            {menuItems.map((item, index) => (
+          <button type="button" className="dropdown-toggle">
+            {active || placeholder}
+          </button>
+          <ul className="dropdown-menu">
+            {options.map((item, index) => (
               <li key={index}>
-                <a
-                  href="#"
+                <button
+                  type="button"
                   onClick={(e) => handleItemClick(e, item)}
                   className={active === item ? 'active' : ''}
                 >
                   {item}
-                </a>
+                </button>
               </li>
             ))}
           </ul>
