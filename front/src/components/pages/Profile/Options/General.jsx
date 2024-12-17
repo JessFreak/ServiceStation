@@ -54,7 +54,9 @@ const General = () => {
     }
   };
 
-  const handleSave = async () => {
+  const handleSave = async (e) => {
+    e.preventDefault();
+
     try {
       const response = await axios.patch(`${process.env.REACT_APP_API_URL}/users`, userData, {
         withCredentials: true,
@@ -75,7 +77,7 @@ const General = () => {
     <>
       <h1 className="profile-title">Дані профілю</h1>
       <div className="profile-card">
-        <div className="profile-section">
+        <form className="profile-section" onSubmit={handleSave}>
           <div className="input-container">
             <label htmlFor="name">Ім'я</label>
             <input
@@ -116,14 +118,17 @@ const General = () => {
               id="phone"
               name="phone"
               placeholder="0686969696"
+              pattern="[0]{1}[0-9]{9}"
+              maxLength={10}
               value={userData.phone}
               onChange={handleChange}
+              required
             />
           </div>
-          <button className="red-button save-button" onClick={handleSave}>
+          <button className="red-button save-button" type='submit'>
             Зберегти
           </button>
-        </div>
+        </form>
         <div className="avatar-section">
           <div className="avatar-placeholder">
             <img
