@@ -69,19 +69,17 @@ export const Services = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const orderDate = deserializeOrderDate(formData);
-      await axiosInstance.post('orders', {
-        vehicleId: selectedVehicle.id,
-        services: selectedServices.map((service) => service.id),
-        orderDate,
-      });
+    const orderDate = deserializeOrderDate(formData);
+    const response = await axiosInstance.post('orders', {
+      vehicleId: selectedVehicle.id,
+      services: selectedServices.map((service) => service.id),
+      orderDate,
+    });
 
-      toast.success('Замовлення створено');
-      closeModal();
-    } catch (error) {
-      toast.error(error.response.data.message)
-    }
+    if (response.error) return;
+
+    toast.success('Замовлення створено');
+    closeModal();
   };
 
   if (loading) {

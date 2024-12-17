@@ -26,41 +26,39 @@ function VehicleInfo({ initial, onVehicleUpdate, setNewVehicle }) {
       return;
     }
 
-    try {
-      let response;
-      if (carData.id) {
-        response = await axiosInstance.patch(`users/vehicles/${carData.id}`, {
-          ...carData,
-          type: active,
-        });
-        toast.success('Транспорт оновлено успішно.');
-      } else {
-        response = await axiosInstance.post('users/vehicles', {
-          ...carData,
-          type: active,
-        });
-        onVehicleUpdate();
-        setNewVehicle(null);
-        toast.success('Транспорт додано успішно.');
-      }
-      setCarData(response.data);
-      onVehicleUpdate(response.data);
-    } catch (error) {
-      toast.error(error.response.data.message);
+    let response;
+    if (carData.id) {
+      response = await axiosInstance.patch(`users/vehicles/${carData.id}`, {
+        ...carData,
+        type: active,
+      });
+      if (response.error) return;
+
+      toast.success('Транспорт оновлено успішно.');
+    } else {
+      response = await axiosInstance.post('users/vehicles', {
+        ...carData,
+        type: active,
+      });
+      if (response.error) return;
+
+      onVehicleUpdate();
+      setNewVehicle(null);
+      toast.success('Транспорт додано успішно.');
     }
+    setCarData(response.data);
+    onVehicleUpdate(response.data);
   };
 
   const handleDelete = async () => {
     if (!initial.id) return;
 
-    try {
-      await axiosInstance.delete(`users/vehicles/${carData.id}`);
-      toast.success('Транспорт видалено успішно.');
-      onVehicleUpdate(null);
-      setNewVehicle(false);
-    } catch (error) {
-      toast.error(error.response?.data.message);
-    }
+    const response = await axiosInstance.delete(`users/vehicles/${carData.id}`);
+    if (response.error) return;
+
+    toast.success('Транспорт видалено успішно.');
+    onVehicleUpdate(null);
+    setNewVehicle(false);
   };
 
   return (

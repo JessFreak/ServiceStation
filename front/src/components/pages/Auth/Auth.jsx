@@ -31,13 +31,11 @@ const Auth = ({ isSignup, setIsSignup }) => {
 
     const userData = { name, surname, email, phone, password };
 
-    try {
-      await axiosInstance.post('auth/register', userData);
-      toggleForm();
-      toast.success('Реєстрація успішна. Ви можете увійти.');
-    } catch (error) {
-      toast.error(error.response.data.message);
-    }
+    const response = await axiosInstance.post('auth/register', userData);
+    if (response.error) return;
+
+    toggleForm();
+    toast.success('Реєстрація успішна. Ви можете увійти.');
   };
 
   const handleLoginSubmit = async (e) => {
@@ -45,15 +43,13 @@ const Auth = ({ isSignup, setIsSignup }) => {
 
     const loginData = { email, password };
 
-    try {
-      const response = await axiosInstance.post('auth/login', loginData);
-      const { token } = response.data;
-      document.cookie = `access_token=${token};`;
-      navigate('/');
-      window.location.reload();
-    } catch (error) {
-      toast.error(error.response?.data?.message);
-    }
+    const response = await axiosInstance.post('auth/login', loginData);
+    if (response.error) return;
+
+    const { token } = response.data;
+    document.cookie = `access_token=${token};`;
+    navigate('/');
+    window.location.reload();
   };
 
   return (

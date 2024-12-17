@@ -4,7 +4,7 @@ import Sidebar from '@UI/Sidebar/Sidebar';
 import General from './Options/General';
 import Vehicles from './Options/Vehicles/Vehicles';
 import History from './Options/OrderHistory/OrderHistory';
-import Settings from './Options/Settings';
+import Settings from './Options/Settings/Settings';
 
 const Profile = () => {
   const [activeSidebarItem, setActiveSidebarItem] = useState('Загальне');

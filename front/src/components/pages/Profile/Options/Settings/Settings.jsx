@@ -1,7 +1,7 @@
 import './Settings.css';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { axiosInstance, getErrorMessage } from '@/utils';
+import { axiosInstance } from '@/utils';
 import MyModal from '@UI/MyModal';
 
 const Settings = () => {
@@ -31,16 +31,14 @@ const Settings = () => {
       return;
     }
 
-    try {
-      await axiosInstance.patch('auth/password', {
-        oldPassword: hasPassword ? formData.password : '',
-        newPassword: formData.newPassword
-      });
-      toast.success('Пароль успішно змінено.');
-      await fetchHasPassword();
-    } catch (error) {
-      toast.error(getErrorMessage(error));
-    }
+    const response = await axiosInstance.patch('auth/password', {
+      oldPassword: hasPassword ? formData.password : '',
+      newPassword: formData.newPassword,
+    });
+    if (response.error) return;
+
+    toast.success('Пароль успішно змінено.');
+    await fetchHasPassword();
   };
 
   const handleLogout = async () => {

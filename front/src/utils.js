@@ -1,9 +1,19 @@
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 export const axiosInstance = axios.create({
   baseURL: `${process.env.REACT_APP_API_URL}/`,
   withCredentials: true,
 });
+
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const errorMessage = getErrorMessage(error);
+    toast.error(errorMessage);
+    return { error: true };
+  }
+);
 
 export const roleTranslations = {
   ADMIN: 'Адміністратор',

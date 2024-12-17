@@ -12,15 +12,16 @@ export const UserProvider = ({ children }) => {
     const token = document.cookie.includes('access_token');
 
     const fetchUserData = async () => {
-      try {
-        if (token) {
-          const response = await axios.get(`${process.env.REACT_APP_API_URL}/auth/me`, {
-            withCredentials: true,
-          });
-          setUser(response.data);
+      if (token) {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/auth/me`, {
+          withCredentials: true,
+        });
+        if (response.error) {
+          document.cookie = '';
+          return;
         }
-      } catch (error) {
-        document.cookie = '';
+
+        setUser(response.data);
       }
     };
 

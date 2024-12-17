@@ -98,7 +98,7 @@ export class AuthService {
     }
 
     const phoneExist = await this.userRepository.findByPhone(phone);
-    if (phoneExist && emailExist.id !== userId) {
+    if (phoneExist && phoneExist.id !== userId) {
       throw new AlreadyRegisteredException('User', 'phone');
     }
   }

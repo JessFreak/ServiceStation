@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useUser } from '@/context/UserContext';
+import { axiosInstance } from '@/utils';
 
 const General = () => {
   const { user, setUser } = useUser();
@@ -44,33 +45,21 @@ const General = () => {
       );
 
       setUserData((prevData) => ({ ...prevData, avatarUrl: response.data.data.url }));
-      toast.success('Файл завантажено успішно. Збережіть зміни.', {
-        position: 'bottom-right',
-      });
+      toast.success('Файл завантажено успішно. Збережіть зміни.');
     } catch (error) {
-      toast.error('Помилка завантаження файлу. Будь ласка, спробуйте ще.', {
-        position: 'bottom-right',
-      });
+      toast.error('Помилка завантаження файлу.');
     }
   };
 
   const handleSave = async (e) => {
     e.preventDefault();
 
-    try {
-      const response = await axios.patch(`${process.env.REACT_APP_API_URL}/users`, userData, {
-        withCredentials: true,
-      });
-      setUser(response.data);
+    const response = await axiosInstance.patch(`users`, userData);
+    if (response.error) return;
 
-      toast.success('Дані успішно збережено.', {
-        position: 'bottom-right',
-      });
-    } catch (error) {
-      toast.error(`Помилка при збереженні даних. ${error.response.data.message}`, {
-        position: 'bottom-right',
-      });
-    }
+    setUser(response.data);
+
+    toast.success('Дані успішно збережено.');
   };
 
   return (
