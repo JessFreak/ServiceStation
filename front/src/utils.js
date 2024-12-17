@@ -46,4 +46,3 @@ export const getErrorMessage = (error) => {
 
   return typeof message === 'string' ? message : message.join(', ');
 };
-

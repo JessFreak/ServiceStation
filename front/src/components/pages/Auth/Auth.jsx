@@ -88,9 +88,12 @@ const Auth = ({ isSignup, setIsSignup }) => {
             />
             <input
               className='form-input'
-              type="text"
+              type="tel"
+              id="phone"
               name="phone"
-              placeholder="Телефон"
+              placeholder="0686969696"
+              pattern="[0]{1}[0-9]{9}"
+              maxLength={10}
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               required

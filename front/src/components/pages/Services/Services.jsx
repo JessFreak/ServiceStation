@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import './Services.css';
-import { axiosInstance, deserializeOrderDate, getTomorrowString, serializeVehicle } from '@/utils';
+import {
+  axiosInstance,
+  deserializeOrderDate,
+  getTomorrowString,
+  serializeVehicle
+} from '@/utils';
 import MyModal from '@UI/MyModal';
 import FilterableMultiSelect from '@UI/FilterableMultiSelect/FilterableMultiSelect';
 import { toast } from 'react-toastify';
 import Dropdown from '@UI/Dropdown/Dropdown';
+import { useUser } from '@/context/UserContext';
 
 export const Services = () => {
   const [services, setServices] = useState([]);
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedServices, setSelectedServices] = useState([]);
   const [selectedVehicle, setSelectedVehicle] = useState(null);
@@ -20,15 +25,19 @@ export const Services = () => {
     time: '08:00',
   });
 
+  const { user } = useUser();
+
   useEffect(() => {
     const fetchServices = async () => {
       try {
         setLoading(true);
-        const services = await axiosInstance.get('services');
-        setServices(services.data);
+        const servicesResponse = await axiosInstance.get('services');
+        setServices(servicesResponse.data);
 
-        const vehicles = await axiosInstance.get('users/vehicles');
-        setVehicles(vehicles.data);
+        if (user) {
+          const vehiclesResponse = await axiosInstance.get('users/vehicles');
+          setVehicles(vehiclesResponse.data);
+        }
       } finally {
         setLoading(false);
       }
@@ -37,7 +46,7 @@ export const Services = () => {
     setFormData((prev) => ({ ...prev, date: getTomorrowString() }));
 
     fetchServices();
-  }, []);
+  }, [user]);
 
   const openModal = (service) => {
     setSelectedServices([service]);
@@ -118,7 +127,7 @@ export const Services = () => {
           onClose={closeModal}
         >
           <h1>Замовлення послуги</h1>
-          <form className="order-form" onSubmit={handleSubmit}>
+          {user ? <form className="order-form" onSubmit={handleSubmit}>
             <div>
               <div className="input-container">
                 <label htmlFor="name">Транспорт</label>
@@ -165,7 +174,7 @@ export const Services = () => {
             <button className="service-button" type="submit">
               Замовити
             </button>
-          </form>
+          </form> : <h2>Авторизуйтесь для виконання замовлення.</h2>}
         </MyModal>
       )}
     </div>

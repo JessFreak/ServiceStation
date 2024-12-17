@@ -7,14 +7,14 @@
 .auth-button {
     min-width: 130px;
     padding: 10px;
-    height: 40px;
+    height: fit-content;
     justify-content: center;
     display: block;
     color: #fff;
     background-color: #573b8a;
     font-size: 1em;
     font-weight: bold;
-    margin: 30px auto 10px;
+    margin: auto;
     outline: none;
     border: none;
     border-radius: 5px;
@@ -83,7 +83,7 @@ label {
     font-size: 2.3em;
     justify-content: center;
     display: flex;
-    margin: 50px;
+    margin: 40px;
     font-weight: bold;
     cursor: pointer;
     transition: .5s ease-in-out;
@@ -91,7 +91,7 @@ label {
 
 .form-input {
     width: 60%;
-    height: 10px;
+    font-size: 14px;
     background: #e0dede;
     justify-content: center;
     display: flex;
