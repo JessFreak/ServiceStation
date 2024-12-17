@@ -127,7 +127,7 @@ export const Services = () => {
           onClose={closeModal}
         >
           <h1>Замовлення послуги</h1>
-          {user ? <form className="order-form" onSubmit={handleSubmit}>
+          {(user && !!vehicles.length) && <form className="order-form" onSubmit={handleSubmit}>
             <div>
               <div className="input-container">
                 <label htmlFor="name">Транспорт</label>
@@ -174,7 +174,9 @@ export const Services = () => {
             <button className="service-button" type="submit">
               Замовити
             </button>
-          </form> : <h2>Авторизуйтесь для виконання замовлення.</h2>}
+          </form>}
+          {!user && <h2>Авторизуйтесь для виконання замовлення.</h2>}
+          {!vehicles.length && <h2>Додайте транспорт у профіль для виконання замовлення.</h2>}
         </MyModal>
       )}
     </div>

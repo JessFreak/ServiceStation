@@ -1,41 +1,69 @@
 import { useEffect, useState } from 'react';
 import './OrderHistory.css';
 import Dropdown from '@UI/Dropdown/Dropdown';
-import { axiosInstance, deserializeVehicle, serializeVehicle } from '@/utils';
+import OrdersTable from '@UI/OrdersTable/OrdersTable';
+import { axiosInstance, deserializeUser, deserializeVehicle, serializeUser, serializeVehicle } from '@/utils';
 import { toast } from 'react-toastify';
 
-const OrderHistory = () => {
-  const [filters, setFilters] = useState({ orderDay: null, vehicleId: null, serviceId: null });
+const OrderHistory = ({ role = 'ADMIN' }) => {
+  const [filters, setFilters] = useState({
+    orderDay: null,
+    vehicleId: null,
+    serviceId: null,
+    userId: null,
+    status: null,
+  });
   const [activeVehicle, setActiveVehicle] = useState(null);
   const [activeService, setActiveService] = useState(null);
+  const [activeUser, setActiveUser] = useState(null);
+  const [activeWorker, setActiveWorker] = useState(null);
   const [orders, setOrders] = useState([]);
   const [vehicles, setVehicles] = useState([]);
   const [services, setServices] = useState([]);
+  const [workers, setWorkers] = useState([]);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchFilters = async () => {
-    try {
-      setLoading(true);
-      const services = await axiosInstance.get('services');
-      setServices(services.data);
+    setLoading(true);
+    const services = await axiosInstance.get('services');
+    setServices(services.data);
 
+    if (role === 'USER') {
       const vehicles = await axiosInstance.get('users/vehicles');
       setVehicles(vehicles.data);
-    } finally {
-      setLoading(false);
+    } else if (role === 'ADMIN') {
+      const workers = await axiosInstance.get('users', {
+        params: { role: 'WORKER' },
+      });
+      setWorkers(workers.data);
+
+      const users = await axiosInstance.get('users');
+      setUsers(users.data);
     }
+
+    setLoading(false);
   };
 
   const fetchOrders = async () => {
     setLoading(true);
-    try {
-      const orders = await axiosInstance.get('users/orders', {
-        params: { ...filters, }
+    let orders;
+    if (role === 'USER') {
+      orders = await axiosInstance.get('users/orders', {
+        params: { ...filters },
       });
-      setOrders(orders.data);
-    } finally {
-      setLoading(false);
+    } else if (role === 'WORKER') {
+      orders = await axiosInstance.get('orders/assigned', {
+        params: { ...filters },
+      });
+    } else if (role === 'ADMIN') {
+      orders = await axiosInstance.get('orders', {
+        params: { ...filters },
+      });
     }
+
+    setOrders(orders.data);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -44,10 +72,13 @@ const OrderHistory = () => {
 
   useEffect(() => {
     fetchOrders();
-  }, [filters, activeVehicle]);
+  }, [filters]);
 
   const vehicleOptions = vehicles.map(serializeVehicle);
+  const userOptions = users.map(serializeUser);
+  const workerOptions = workers.map(serializeUser);
   const serviceOptions = services.map((s) => s.name);
+  const statusOptions = ['WAITING', 'PROCESSING', 'DONE', 'CANCELED'];
 
   const handleVehicleChange = (vehicleString) => {
     if (vehicleString) {
@@ -72,6 +103,34 @@ const OrderHistory = () => {
     setActiveService(serviceName);
   };
 
+  const handleUserChange = (userName) => {
+    if (!userName) {
+      setFilters({ ...filters, userId: null });
+      setActiveUser(null);
+      return;
+    }
+
+    const { email } = deserializeUser(userName);
+    const user = users.find((user) => user.email === email);
+
+    setActiveUser(userName);
+    setFilters(({ ...filters, userId: user.id }));
+  };
+
+  const handleWorkerChange = (userName) => {
+    if (!userName) {
+      setFilters({ ...filters, workerId: null });
+      setActiveWorker(null);
+      return;
+    }
+
+    const { email } = deserializeUser(userName);
+    const worker = workers.find((user) => user.email === email);
+
+    setActiveWorker(userName);
+    setFilters(({ ...filters, workerId: worker.id }));
+  };
+
   const handleCancelOrder = async (orderId) => {
     await axiosInstance.post(`users/orders/${orderId}/cancel`);
     toast.success('Замовлення успішно скасовано.');
@@ -83,12 +142,6 @@ const OrderHistory = () => {
     <div className="order-history">
       <h1>Історія послуг</h1>
       <div className="filters">
-        <input
-          type="date"
-          placeholder="За датою"
-          min="2020-01-01"
-          onChange={(e) => setFilters({ ...filters, orderDay: e.target.value })}
-        />
         <Dropdown
           options={serviceOptions}
           active={activeService}
@@ -96,64 +149,42 @@ const OrderHistory = () => {
           placeholder="За послугою"
         />
         <Dropdown
+          options={userOptions}
+          active={activeUser}
+          setActive={handleUserChange}
+          placeholder="За користувачем"
+        />
+        <Dropdown
+          options={workerOptions}
+          active={activeWorker}
+          setActive={handleWorkerChange}
+          placeholder="За працівником"
+        />
+        <Dropdown
           options={vehicleOptions}
           active={activeVehicle}
           setActive={handleVehicleChange}
           placeholder="За транспортом"
+        />
+        <Dropdown
+          options={statusOptions}
+          active={filters.status}
+          setActive={(status) => setFilters({ ...filters, status })}
+          placeholder="За статусом"
+        />
+        <input
+          className='date'
+          type="date"
+          placeholder="За датою"
+          min="2020-01-01"
+          onChange={(e) => setFilters({ ...filters, orderDay: e.target.value || null })}
         />
       </div>
 
       {loading ? (
         <p>Завантаження...</p>
       ) : (
-        <table>
-          <thead>
-          <tr>
-            <th>Дата замовлення</th>
-            <th>Транспорт</th>
-            <th>Послуга</th>
-            <th>Статус</th>
-            <th>Ціна</th>
-            <th>Дія</th>
-          </tr>
-          </thead>
-          <tbody>
-          {orders.map((order, index) => (
-            <tr key={index}>
-              <td>
-                {new Date(order.orderDate).toLocaleDateString('uk', {
-                  weekday: 'long',
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                  hour: 'numeric',
-                  minute: 'numeric',
-                })}
-              </td>
-              <td>{order.vehicle.model} - {order.vehicle.vin}</td>
-              <td>{order.services.map((service) => service.name).join(', ')}</td>
-              <td className='cell-status'>
-                  <span className={`status ${order.status.replace(' ', '-')}`}>
-                    {order.status}
-                  </span>
-              </td>
-              <td>{order.totalPrice} грн</td>
-              <td>
-                {order.status !== 'CANCELED' && (
-                  <button onClick={() => handleCancelOrder(order.id)} className="red-button">
-                    Відмінити
-                  </button>
-                )}
-              </td>
-            </tr>
-          ))}
-          {orders.length === 0 && (
-            <tr>
-              <td colSpan="6" className="no-data">Замовлень не знайдено.</td>
-            </tr>
-          )}
-          </tbody>
-        </table>
+        <OrdersTable orders={orders} onCancelOrder={handleCancelOrder} role={role}/>
       )}
     </div>
   );

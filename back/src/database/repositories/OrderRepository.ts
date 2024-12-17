@@ -14,7 +14,11 @@ export class OrderRepository {
       },
     },
     worker: true,
-    vehicle: true,
+    vehicle: {
+      include: {
+        user: true
+      },
+    },
   };
 
   async create (data: Prisma.OrderUncheckedCreateInput): Promise<OrderDB> {

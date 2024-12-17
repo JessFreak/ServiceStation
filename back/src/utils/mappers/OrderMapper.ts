@@ -16,6 +16,7 @@ export class OrderMapper {
       totalPrice,
       services,
       worker: UserMapper.getUserResponse(order.worker),
+      user: UserMapper.getUserResponse(order?.vehicle?.user),
     };
   }
 

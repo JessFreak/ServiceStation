@@ -7,5 +7,7 @@ export interface OrderServiceWithService extends OrderService {
 export interface OrderDB extends Order {
   services: OrderServiceWithService[];
   worker: User;
-  vehicle: Vehicle;
+  vehicle: Vehicle & {
+    user: User;
+  };
 }

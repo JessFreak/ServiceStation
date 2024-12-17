@@ -3,6 +3,7 @@ import { UserResponse } from '../types/UserResponse';
 
 export class UserMapper {
   static getUserResponse(user: User): UserResponse {
+    if (!user) return null;
     const { password, ...userWithoutPassword } = user;
     return userWithoutPassword;
   }

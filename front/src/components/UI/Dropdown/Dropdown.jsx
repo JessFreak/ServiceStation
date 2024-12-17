@@ -2,6 +2,10 @@ import React from 'react';
 import './Dropdown.css';
 
 const Dropdown = ({ options, active, setActive, placeholder = 'Обери опцію' }) => {
+  if (!options.length) {
+    return null;
+  }
+
   const handleItemClick = (e, itemName) => {
     e.preventDefault();
     setActive(active === itemName ? null : itemName);

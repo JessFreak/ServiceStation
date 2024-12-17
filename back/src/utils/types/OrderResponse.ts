@@ -21,4 +21,5 @@ export type OrderResponse = {
   services: ServiceResponse[];
   worker: UserResponse;
   vehicle: Vehicle;
+  user: UserResponse;
 };

@@ -41,6 +41,18 @@ export const deserializeVehicle = (vehicle) => {
   }
 };
 
+export const serializeUser = (user) => {
+  if (!user) return '-';
+  return `${user.name} ${user.surname} - ${user.email}`
+};
+
+export const deserializeUser = (user) => {
+  const userSplit = user.split(' - ');
+  return {
+    email: userSplit[1].trim(),
+  }
+};
+
 export const getErrorMessage = (error) => {
   const message = error.response?.data?.message;
 
