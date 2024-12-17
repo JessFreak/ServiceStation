@@ -69,4 +69,10 @@ export class AuthController {
   async updatePassword (@UserRequest() user: User, @Body() body: UpdatePasswordDto): Promise<void> {
     return this.authService.updatePassword(user.id, body);
   }
+
+  @Access()
+  @Get('hasPassword')
+  async hasPassword (@UserRequest() user: User): Promise<boolean> {
+    return this.authService.hasPassword(user.id);
+  }
 }

@@ -30,3 +30,10 @@ export const deserializeVehicle = (vehicle) => {
     vin: vehicleSplit[1],
   }
 };
+
+export const getErrorMessage = (error) => {
+  const message = error.response?.data?.message;
+
+  return typeof message === 'string' ? message : message.join(', ');
+};
+

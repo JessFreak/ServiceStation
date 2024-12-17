@@ -79,7 +79,9 @@ export class AuthService {
 
   async updatePassword(userId: string, { oldPassword, newPassword }: UpdatePasswordDto): Promise<void> {
     const user = await this.userRepository.findById(userId);
-    await this.validatePassword(oldPassword, user.password);
+    if (!!user.password) {
+      await this.validatePassword(oldPassword, user.password);
+    }
 
     if (oldPassword === newPassword) {
       throw new PasswordRepeatException;
@@ -99,5 +101,11 @@ export class AuthService {
     if (phoneExist && emailExist.id !== userId) {
       throw new AlreadyRegisteredException('User', 'phone');
     }
+  }
+
+  async hasPassword (userId: string): Promise<boolean> {
+    const user = await this.userRepository.findById(userId);
+
+    return !!user.password;
   }
 }
