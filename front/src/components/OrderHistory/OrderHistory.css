@@ -1,11 +1,3 @@
-.order-history {
-    font-family: Arial, sans-serif;
-}
-
-.order-history .red-button {
-    margin: 0;
-}
-
 .order-history h1 {
     margin-bottom: 20px;
 }
@@ -28,6 +20,6 @@
 }
 
 .filters .dropdown {
-    min-width: 500px;
+    min-width: 450px;
 }
 

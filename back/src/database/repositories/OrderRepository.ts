@@ -26,7 +26,7 @@ export class OrderRepository {
   }
 
   async findMany (where: Prisma.OrderWhereInput): Promise<OrderDB[]> {
-    return this.prisma.order.findMany({ where, include: this.include });
+    return this.prisma.order.findMany({ where, include: this.include, orderBy: { orderDate: 'desc' } });
   }
 
   async findById (id: string): Promise<OrderDB> {

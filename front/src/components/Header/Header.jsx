@@ -30,6 +30,12 @@ const Header = ({ setIsSignup }) => {
         <NavLink to="/services" className="header__nav-link">
           Послуги
         </NavLink>
+        { user?.role === 'WORKER' && <NavLink to="/assigned-orders" className="header__nav-link">
+          Призначені замовлення
+        </NavLink> }
+        { user?.role === 'ADMIN' && <NavLink to="/admin-panel" className="header__nav-link">
+          Адмін панель
+        </NavLink> }
       </nav>
       {user ? (
         <div className="header__user-info" onClick={handleProfileClick}>

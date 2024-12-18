@@ -1,9 +1,9 @@
 import { Navigate } from 'react-router-dom';
-import { useUser } from '@/context/UserContext';
+import { hasAccessToken } from '@/utils';
 
 const PrivateRoute = ({ children }) => {
-  const { user } = useUser();
-  if (!user) return <Navigate to="/auth" />;
+  const has = hasAccessToken();
+  if (!has) return <Navigate to="/auth" />;
 
   return children;
 };

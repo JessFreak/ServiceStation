@@ -1,11 +1,18 @@
 import { useEffect, useState } from 'react';
 import './OrderHistory.css';
 import Dropdown from '@UI/Dropdown/Dropdown';
-import OrdersTable from '@UI/OrdersTable/OrdersTable';
-import { axiosInstance, deserializeUser, deserializeVehicle, serializeUser, serializeVehicle } from '@/utils';
+import OrdersTable from '@Components/OrderHistory/OrdersTable/OrdersTable';
+import {
+  axiosInstance,
+  deserializeVehicle,
+  getUserId,
+  serializeUser,
+  serializeVehicle,
+  statusOptions,
+} from '@/utils';
 import { toast } from 'react-toastify';
 
-const OrderHistory = ({ role = 'ADMIN' }) => {
+const OrderHistory = ({ role = 'USER', header = 'Історія послуг' }) => {
   const [filters, setFilters] = useState({
     orderDay: null,
     vehicleId: null,
@@ -17,11 +24,13 @@ const OrderHistory = ({ role = 'ADMIN' }) => {
   const [activeService, setActiveService] = useState(null);
   const [activeUser, setActiveUser] = useState(null);
   const [activeWorker, setActiveWorker] = useState(null);
+
   const [orders, setOrders] = useState([]);
   const [vehicles, setVehicles] = useState([]);
   const [services, setServices] = useState([]);
   const [workers, setWorkers] = useState([]);
   const [users, setUsers] = useState([]);
+
   const [loading, setLoading] = useState(true);
 
   const fetchFilters = async () => {
@@ -78,7 +87,6 @@ const OrderHistory = ({ role = 'ADMIN' }) => {
   const userOptions = users.map(serializeUser);
   const workerOptions = workers.map(serializeUser);
   const serviceOptions = services.map((s) => s.name);
-  const statusOptions = ['WAITING', 'PROCESSING', 'DONE', 'CANCELED'];
 
   const handleVehicleChange = (vehicleString) => {
     if (vehicleString) {
@@ -110,11 +118,10 @@ const OrderHistory = ({ role = 'ADMIN' }) => {
       return;
     }
 
-    const { email } = deserializeUser(userName);
-    const user = users.find((user) => user.email === email);
+    const userId = getUserId(userName, users);
 
     setActiveUser(userName);
-    setFilters(({ ...filters, userId: user.id }));
+    setFilters(({ ...filters, userId }));
   };
 
   const handleWorkerChange = (userName) => {
@@ -124,11 +131,10 @@ const OrderHistory = ({ role = 'ADMIN' }) => {
       return;
     }
 
-    const { email } = deserializeUser(userName);
-    const worker = workers.find((user) => user.email === email);
+    const workerId = getUserId(userName, workers);
 
     setActiveWorker(userName);
-    setFilters(({ ...filters, workerId: worker.id }));
+    setFilters(({ ...filters, workerId }));
   };
 
   const handleCancelOrder = async (orderId) => {
@@ -138,9 +144,24 @@ const OrderHistory = ({ role = 'ADMIN' }) => {
     await fetchOrders();
   };
 
+  const handleStatusChange = async (orderId, status) => {
+    await axiosInstance.patch(`orders/${orderId}/status`, { status });
+    toast.success('Статус замовлення успішно змінено.');
+    await fetchOrders();
+  };
+
+  const handleAssignedChange = async (orderId, userName) => {
+    if (!userName) return;
+    const workerId = getUserId(userName, workers);
+
+    await axiosInstance.patch(`orders/${orderId}/worker`, { workerId });
+    toast.success('Відповідального за замовлення успішно змінено.');
+    await fetchOrders();
+  };
+
   return (
     <div className="order-history">
-      <h1>Історія послуг</h1>
+      <h1>{header}</h1>
       <div className="filters">
         <Dropdown
           options={serviceOptions}
@@ -184,7 +205,13 @@ const OrderHistory = ({ role = 'ADMIN' }) => {
       {loading ? (
         <p>Завантаження...</p>
       ) : (
-        <OrdersTable orders={orders} onCancelOrder={handleCancelOrder} role={role}/>
+        <OrdersTable
+          orders={orders} role={role}
+          onCancelOrder={handleCancelOrder}
+          onStatusChange={handleStatusChange}
+          workers={workerOptions}
+          onWorkerChange={handleAssignedChange}
+        />
       )}
     </div>
   );

@@ -15,11 +15,15 @@ axiosInstance.interceptors.response.use(
   }
 );
 
+export const hasAccessToken = () => document.cookie.includes('access_token');
+
 export const roleTranslations = {
   ADMIN: 'Адміністратор',
   USER: 'Користувач',
   WORKER: 'Працівник',
 };
+
+export const statusOptions = ['WAITING', 'PROCESSING', 'DONE', 'CANCELED'];
 
 export const getTodayString = () => new Date().toISOString().split('T')[0];
 
@@ -52,6 +56,12 @@ export const deserializeUser = (user) => {
     email: userSplit[1].trim(),
   }
 };
+
+export const getUserId = (userName, users) => {
+  const { email } = deserializeUser(userName);
+  const worker = users.find((user) => user.email === email);
+  return worker.id;
+}
 
 export const getErrorMessage = (error) => {
   const message = error.response?.data?.message;

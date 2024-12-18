@@ -1,26 +1,3 @@
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-th, td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    text-align: left;
-}
-
-th {
-    background-color: #f2f4f7;
-}
-
-tr:nth-child(even) {
-    background-color: #f2f4f7;
-}
-
-tr:hover {
-    background-color: rgba(44, 62, 80, 0.5);
-}
-
 .cell-status {
     text-align: center;
 }
@@ -49,9 +26,4 @@ tr:hover {
 
 .status.CANCELED {
     background-color: red;
-}
-
-.no-data {
-    text-align: center;
-    color: #888;
 }

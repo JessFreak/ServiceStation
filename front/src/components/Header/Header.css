@@ -6,6 +6,11 @@
   justify-content: space-between;
   align-items: center;
   font-size: 20px;
+  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  min-width: 100vw;
 }
 
 .header__logo {

@@ -7,6 +7,11 @@
     font-family: 'Poppins', sans-serif;
 }
 
+html, body {
+    width: fit-content;
+    height: fit-content;
+}
+
 .auth-button {
     min-width: 130px;
     padding: 10px;
@@ -33,10 +38,9 @@
     border-width: 0 0 4px;
     color: #FFFFFF;
     cursor: pointer;
-    font-family: din-round, sans-serif;
     font-size: 15px;
     font-weight: 700;
-    letter-spacing: .8px;
+    letter-spacing: 1px;
     line-height: 20px;
     outline: none;
     padding: 13px 16px;
@@ -135,4 +139,39 @@ label {
     border-radius: 4px;
     margin: 5px 0 20px;
     font-size: 1rem;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f4f7;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f4f7;
+}
+
+tr:hover {
+    background-color: rgba(44, 62, 80, 0.5);
+}
+
+table .red-button {
+    margin: 0;
+}
+
+body > div > .order-history {
+    padding: 50px;
+}
+
+.no-data {
+    text-align: center;
+    color: #888;
 }

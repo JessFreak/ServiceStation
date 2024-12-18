@@ -1,7 +1,6 @@
 .profile-container {
     display: flex;
     min-height: 90vh;
-    font-family: Arial, sans-serif;
 }
 
 .profile-content {

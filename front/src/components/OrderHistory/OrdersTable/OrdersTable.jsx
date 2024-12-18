@@ -1,8 +1,9 @@
 import React from 'react';
 import './OrdersTable.css';
-import { serializeUser } from '@/utils';
+import { serializeUser, statusOptions } from '@/utils';
+import Dropdown from '@UI/Dropdown/Dropdown';
 
-const OrdersTable = ({ orders, onCancelOrder, role }) => {
+const OrdersTable = ({ orders, role, onCancelOrder, onStatusChange, onWorkerChange, workers }) => {
   const isWorkerOrder = role === 'WORKER';
   const isAdminOrder = role === 'ADMIN';
   const isUserOrder = role === 'USER';
@@ -44,12 +45,17 @@ const OrdersTable = ({ orders, onCancelOrder, role }) => {
           <td>{order.services.map((service) => service.name).join(', ')}</td>
           {!isWorkerOrder && (
             <td>
-              {serializeUser(order.worker)}
+              {isAdminOrder
+                ? <Dropdown options={workers} active={serializeUser(order.worker)} setActive={(userName) => onWorkerChange(order.id, userName)}/>
+                : serializeUser(order.worker)}
             </td>
           )}
           <td className='cell-status'>
               <span className={`status ${order.status.replace(' ', '-')}`}>
-                {order.status}
+                {isWorkerOrder
+                  ? <Dropdown options={statusOptions} active={order.status} setActive={(status) => onStatusChange(order.id, status)}/>
+                  : order.status
+                }
               </span>
           </td>
           <td>{order.totalPrice} грн</td>
