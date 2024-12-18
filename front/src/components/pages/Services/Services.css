@@ -1,5 +1,8 @@
 .services {
     padding: 20px 16%;
+}
+
+.services > h1 {
     text-align: center;
 }
 
@@ -12,7 +15,6 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 40px;
-    padding: 0 10px;
 }
 
 .service-card {

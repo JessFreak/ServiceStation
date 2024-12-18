@@ -3,9 +3,14 @@ import { axiosInstance, getDateString } from '@/utils';
 import MyModal from '@UI/MyModal';
 import ServiceForm from '@Components/pages/AdminPanel/ServiceForm';
 import { toast } from 'react-toastify';
+import { Loading } from '@UI/Loading';
+import ServicesFilters from '@Components/pages/Services/ServicesFilters';
 
 const Services = () => {
   const [services, setServices] = useState([]);
+  const [filters, setFilters] = useState({ name: '', minPrice: null, maxPrice: null });
+  const [debounceTimer, setDebounceTimer] = useState(null);
+
   const [loading, setLoading] = useState(true);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -13,7 +18,9 @@ const Services = () => {
 
   const fetchServices = async () => {
     setLoading(true);
-    const response = await axiosInstance.get('services');
+    const response = await axiosInstance.get('services', {
+      params: filters,
+    });
     if (response.error) return;
 
     setServices(response.data);
@@ -21,11 +28,17 @@ const Services = () => {
   };
 
   useEffect(() => {
-    fetchServices();
-  }, []);
+    if (debounceTimer) clearTimeout(debounceTimer);
+
+    const timer = setTimeout(() => {
+      fetchServices();
+    }, 500);
+
+    setDebounceTimer(timer);
+  }, [filters]);
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     let response;
 
     if (selectedService?.id) {
@@ -55,7 +68,7 @@ const Services = () => {
     setIsModalOpen(false);
   };
 
-  if (loading) return <h1>Завантаження...</h1>;
+  if (loading) return <Loading />;
 
   return (
     <div className="vehicles">
@@ -65,8 +78,7 @@ const Services = () => {
           Створити послугу
         </button>
       </div>
-      <div className="filters">
-      </div>
+      <ServicesFilters filters={filters} onFilterChange={setFilters} />
       <table>
         <thead>
         <tr>
@@ -84,41 +96,43 @@ const Services = () => {
         <tbody>
         {services.map((service) => (
           <tr key={service.id}>
-            {<td className="id">{service.id}</td>}
+            <td className="id">{service.id}</td>
             <td>
               {service.imageUrl ? (
-                <img
-                  src={service.imageUrl} alt={service.name}/>
+                <img src={service.imageUrl} alt={service.name} />
               ) : (
                 <span>Без зображення</span>
               )}
             </td>
-            {<td>{service.name}</td>}
-            {<td>{service.description}</td>}
-            {<td>{service.price}</td>}
-            {<td>{getDateString(service.createdAt)}</td>}
-            {<td>{getDateString(service.updatedAt)}</td>}
-            {<td className="cell-status">
+            <td>{service.name}</td>
+            <td>{service.description}</td>
+            <td>{service.price}</td>
+            <td>{getDateString(service.createdAt)}</td>
+            <td>{getDateString(service.updatedAt)}</td>
+            <td className="cell-status">
                 <span className={`status ${service.isActive ? 'DONE' : 'CANCELED'}`}>
                   {service.isActive ? 'Активно' : 'Неактивно'}
                 </span>
-            </td>}
-            {<td>
+            </td>
+            <td>
               <button className="service-button" onClick={() => openEditModal(service)}>
                 <i className="bx bx-edit-alt"></i>
               </button>
-            </td>}
+            </td>
           </tr>
         ))}
         {services.length === 0 && (
           <tr>
-            <td colSpan="8" className="no-data">Користувачів не знайдено.</td>
+            <td colSpan="8" className="no-data">
+              Користувачів не знайдено.
+            </td>
           </tr>
         )}
         </tbody>
       </table>
+
       <MyModal isOpen={isModalOpen} onClose={closeModal}>
-        <ServiceForm service={selectedService} onChange={setSelectedService} onSubmit={handleSubmit}/>
+        <ServiceForm service={selectedService} onChange={setSelectedService} onSubmit={handleSubmit} />
       </MyModal>
     </div>
   );

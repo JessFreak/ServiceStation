@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import Dropdown from '@UI/Dropdown/Dropdown';
 import { useUser } from '@/context/UserContext';
 import { Loading } from '@UI/Loading';
+import ServicesFilters from '@Components/pages/Services/ServicesFilters';
 
 export const Services = () => {
   const [services, setServices] = useState([]);
@@ -22,33 +23,48 @@ export const Services = () => {
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
-    date: '',
+    date: getTomorrowString(),
     time: '08:00',
   });
   const [totalPrice, setTotalPrice] = useState(0);
 
+  const [filters, setFilters] = useState({ name: '', minPrice: null, maxPrice: null });
+  const [debounceTimer, setDebounceTimer] = useState(null);
+
   const { user } = useUser();
 
+  const fetchVehicles = async () => {
+    if (user) {
+      setLoading(true);
+      const vehiclesResponse = await axiosInstance.get('users/vehicles');
+      setVehicles(vehiclesResponse.data);
+      setLoading(false);
+    }
+  }
+
   useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        setLoading(true);
-        const servicesResponse = await axiosInstance.get('services');
-        setServices(servicesResponse.data);
-
-        if (user) {
-          const vehiclesResponse = await axiosInstance.get('users/vehicles');
-          setVehicles(vehiclesResponse.data);
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    setFormData((prev) => ({ ...prev, date: getTomorrowString() }));
-
-    fetchServices();
+    fetchVehicles();
   }, [user]);
+
+  const fetchServices = async () => {
+    setLoading(true);
+    const servicesResponse = await axiosInstance.get('services', {
+      params: filters,
+    });
+    setServices(servicesResponse.data);
+
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    if (debounceTimer) clearTimeout(debounceTimer);
+
+    const timer = setTimeout(() => {
+      fetchServices();
+    }, 500);
+
+    setDebounceTimer(timer);
+  }, [filters]);
 
   useEffect(() => {
     if (selectedServices.length > 0) {
@@ -117,6 +133,7 @@ export const Services = () => {
   return (
     <div className="services">
       <h1 className="services__title">Обери свою послугу</h1>
+      <ServicesFilters filters={filters} onFilterChange={setFilters} />
       <div className="services__grid">
         {services.map((service, index) => (
           <div className="service-card" key={index}>
