@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './Services.css';
 import {
   axiosInstance,
-  deserializeOrderDate,
+  deserializeOrderDate, deserializeVehicle,
   getTomorrowString,
   serializeVehicle
 } from '@/utils';
@@ -36,8 +36,8 @@ export const Services = () => {
   const fetchVehicles = async () => {
     if (user) {
       setLoading(true);
-      const vehiclesResponse = await axiosInstance.get('users/vehicles');
-      setVehicles(vehiclesResponse.data);
+      const response = await axiosInstance.get('users/vehicles');
+      setVehicles(response.data);
       setLoading(false);
     }
   }
@@ -48,10 +48,10 @@ export const Services = () => {
 
   const fetchServices = async () => {
     setLoading(true);
-    const servicesResponse = await axiosInstance.get('services', {
+    const response = await axiosInstance.get('services', {
       params: filters,
     });
-    setServices(servicesResponse.data);
+    setServices(response.data);
 
     setLoading(false);
   };
@@ -95,8 +95,8 @@ export const Services = () => {
       return;
     }
 
-    const value = vehicle.split(' - ')[1];
-    const selectedVehicle = vehicles.find((vehicle) => vehicle.vin === value);
+    const { vin } = deserializeVehicle(vehicle);
+    const selectedVehicle = vehicles.find((vehicle) => vehicle.vin === vin);
     setSelectedVehicle(selectedVehicle);
   };
 
@@ -126,9 +126,9 @@ export const Services = () => {
     closeModal();
   };
 
-  if (loading) return <Loading />;
-
   const vehicleOptions = vehicles.map(serializeVehicle);
+
+  if (loading) return <Loading />;
 
   return (
     <div className="services">
