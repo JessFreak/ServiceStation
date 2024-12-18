@@ -16,7 +16,7 @@ export class ServiceService {
 
     return this.serviceRepository.findMany({
       isActive,
-      name: { contains: name },
+      name: name ? { contains: name, mode: 'insensitive' } : undefined,
       price: { gte: minPrice, lte: maxPrice },
     });
   }
