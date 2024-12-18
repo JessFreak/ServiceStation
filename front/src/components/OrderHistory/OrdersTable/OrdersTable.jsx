@@ -24,8 +24,8 @@ const OrdersTable = ({ orders, role, onCancelOrder, onStatusChange, onWorkerChan
       </tr>
       </thead>
       <tbody>
-      {orders.map((order, index) => (
-        <tr key={index}>
+      {orders.map((order) => (
+        <tr key={order.id}>
           {isAdminOrder && <td>{order.id}</td>}
           <td>
             {new Date(order.orderDate).toLocaleDateString('uk', {

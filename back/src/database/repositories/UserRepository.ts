@@ -28,7 +28,7 @@ export class UserRepository {
   }
 
   async findMany (args: Prisma.UserFindManyArgs): Promise<User[] | Worker[]> {
-    return this.prisma.user.findMany(args);
+    return this.prisma.user.findMany({ ...args, orderBy: { email: 'asc' } });
   }
 
   async updateById (id: string, data: Prisma.UserUncheckedUpdateInput): Promise<User> {

@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { UserRepository } from '../database/repositories/UserRepository';
 import { VehicleRepository } from '../database/repositories/VehicleRepository';
-import { User, Vehicle } from '@prisma/client';
+import { Role, User, Vehicle } from '@prisma/client';
 import { CreateVehicleDTO, UpdateVehicleDTO } from '../utils/dtos/VehicleDTO';
 import { NotBelongException } from '../utils/exceptions/NotBelongException';
 import { RoleDTO, UpdateUserDTO } from '../utils/dtos/UserDTO';
@@ -23,6 +23,12 @@ export class UserService {
   async update (id: string, data: UpdateUserDTO): Promise<User> {
     await this.authService.checkIfEmailOrPhoneExist(data, id);
     return this.userRepository.updateById(id, data);
+  }
+
+  async updateRole (adminId: string, id: string, role: Role): Promise<User> {
+    if (adminId === id) throw new ForbiddenException('You cannot change your own role.');
+
+    return this.userRepository.updateById(id, { role });
   }
 
   async addVehicle (id: string, data: CreateVehicleDTO): Promise<Vehicle> {

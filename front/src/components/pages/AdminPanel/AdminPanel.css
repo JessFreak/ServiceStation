@@ -1,0 +1,17 @@
+.modal-form label {
+    color: #573b8a;
+}
+
+.modal-form input {
+    width: 100%;
+}
+
+.modal-form .dropdown {
+    margin: auto;
+}
+
+.modal-form form {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
+}

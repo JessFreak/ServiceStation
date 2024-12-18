@@ -17,11 +17,20 @@ axiosInstance.interceptors.response.use(
 
 export const hasAccessToken = () => document.cookie.includes('access_token');
 
-export const roleTranslations = {
-  ADMIN: 'Адміністратор',
-  USER: 'Користувач',
-  WORKER: 'Працівник',
+Map.prototype.getKey = function(value) {
+  for (const [key, val] of this) {
+    if (val === value) {
+      return key;
+    }
+  }
+  return null;
 };
+
+export const roles = new Map([
+  ['ADMIN', 'Адміністратор'],
+  ['USER', 'Користувач'],
+  ['WORKER', 'Працівник'],
+]);
 
 export const statusOptions = ['WAITING', 'PROCESSING', 'DONE', 'CANCELED'];
 

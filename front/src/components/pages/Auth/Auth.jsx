@@ -5,13 +5,16 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import { axiosInstance } from '@/utils';
+import RegisterForm from '@Components/pages/Auth/RegisterForm';
 
 const Auth = ({ isSignup, setIsSignup }) => {
-  const [name, setName] = useState('');
-  const [surname, setSurname] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState({
+    name: '',
+    surname: '',
+    email: '',
+    phone: '',
+    password: '',
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,9 +32,7 @@ const Auth = ({ isSignup, setIsSignup }) => {
   const handleSignupSubmit = async (e) => {
     e.preventDefault();
 
-    const userData = { name, surname, email, phone, password };
-
-    const response = await axiosInstance.post('auth/register', userData);
+    const response = await axiosInstance.post('auth/register', formData);
     if (response.error) return;
 
     toggleForm();
@@ -40,6 +41,8 @@ const Auth = ({ isSignup, setIsSignup }) => {
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
+
+    const { email, password } = formData;
 
     const loginData = { email, password };
 
@@ -55,63 +58,17 @@ const Auth = ({ isSignup, setIsSignup }) => {
   return (
     <div className="auth">
       <div className="main">
-        <input type="checkbox" id="chk" aria-hidden="true" checked={isSignup} onChange={toggleForm} />
+        <input type="checkbox" id="chk" aria-hidden="true" checked={isSignup} onChange={toggleForm}/>
         <div className={isSignup ? 'signup active' : 'signup'}>
-          <form onSubmit={handleSignupSubmit}>
-            <label htmlFor="chk" aria-hidden="true">Реєстрація</label>
-            <input
-              className='form-input'
-              type="text"
-              name="name"
-              placeholder="Ім'я"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
-            <input
-              className='form-input'
-              type="text"
-              name="surname"
-              placeholder="Прізвище"
-              value={surname}
-              onChange={(e) => setSurname(e.target.value)}
-              required
-            />
-            <input
-              className='form-input'
-              type="email"
-              name="email"
-              placeholder="email@gmail.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            <input
-              className='form-input'
-              type="tel"
-              id="phone"
-              name="phone"
-              placeholder="0686969696"
-              pattern="[0]{1}[0-9]{9}"
-              maxLength={10}
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              required
-            />
-            <input
-              className='form-input'
-              type="password"
-              name="password"
-              placeholder="Пароль"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            <button type="submit" className="auth-button">Зареєструватись</button>
-          </form>
+          <label htmlFor="chk" aria-hidden="true">Реєстрація</label>
+          <RegisterForm
+            formData={formData}
+            setFormData={setFormData}
+            onRegister={handleSignupSubmit}
+          />
           <div className="google-login">
             <button className="auth-button google" onClick={handleGoogleLogin}>
-              <img src={GoogleLogo} alt="Google Logo" className="google-logo" />
+              <img src={GoogleLogo} alt="Google Logo" className="google-logo"/>
               Зареєструватись через Google
             </button>
           </div>
@@ -120,34 +77,34 @@ const Auth = ({ isSignup, setIsSignup }) => {
           <form onSubmit={handleLoginSubmit}>
             <label htmlFor="chk" aria-hidden="true">Вхід</label>
             <input
-              className='form-input'
+              className="form-input"
               type="email"
               name="email"
               placeholder="email@gmail.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={formData.email}
+              onChange={(e) => setFormData(prevData => ({ ...prevData, email: e.target.value }))}
               required
             />
             <input
-              className='form-input'
+              className="form-input"
               type="password"
               name="password"
               placeholder="Пароль"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={formData.password}
+              onChange={(e) => setFormData(prevData => ({ ...prevData, password: e.target.value }))}
               required
             />
             <button type="submit" className="auth-button">Увійти</button>
           </form>
           <div className="google-login">
             <button className="auth-button google" onClick={handleGoogleLogin}>
-              <img src={GoogleLogo} alt="Google Logo" className="google-logo" />
+              <img src={GoogleLogo} alt="Google Logo" className="google-logo"/>
               Увійти через Google
             </button>
           </div>
         </div>
       </div>
-      <ToastContainer />
+      <ToastContainer/>
     </div>
   );
 };

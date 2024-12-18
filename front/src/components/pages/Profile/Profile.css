@@ -16,7 +16,7 @@
     width: 60%;
     display: flex;
     justify-content: space-around;
-    background-color: #f2f4f7;
+    background-color: rgba(44, 62, 80, 0.5);
     padding: 30px;
     border-radius: 8px;
 }
@@ -25,11 +25,6 @@
     flex: 1;
     margin-right: 20%;
 }
-
-.profile-section h3 {
-    margin-bottom: 10px;
-}
-
 
 .save-button {
     width: 40%;

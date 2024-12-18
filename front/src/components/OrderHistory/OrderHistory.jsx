@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import './OrderHistory.css';
 import Dropdown from '@UI/Dropdown/Dropdown';
 import OrdersTable from '@Components/OrderHistory/OrdersTable/OrdersTable';
 import {

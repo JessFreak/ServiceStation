@@ -14,12 +14,15 @@
     overflow: auto;
 }
 
+.nav-links * {
+    color: white;
+}
+
 .sidebar .nav-links li button {
     padding: 30px;
     display: flex;
     align-items: center;
     text-decoration: none;
-    color: white;
     background: none;
     border: none;
     width: 100%;

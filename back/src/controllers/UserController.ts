@@ -15,10 +15,11 @@ import { OrderMapper } from '../utils/mappers/OrderMapper';
 import { VehicleByIdPipe } from '../utils/pipes/VehicleByIdPipe';
 import { OrderByIdPipe } from '../utils/pipes/OrderByIdPipe';
 import { ServiceByIdPipe } from '../utils/pipes/ServiceByIdPipe';
+import { UserByIdPipe } from '../utils/pipes/UserByIdPipe';
 
 @Controller('users')
 export class UsersController {
-  constructor(
+  constructor (
     private readonly userService: UserService,
     private readonly authService: AuthService,
     private readonly orderService: OrderService,
@@ -26,28 +27,39 @@ export class UsersController {
 
   @Post()
   @Access(Role.ADMIN)
-  async create(@Body() body: CreateUserDTO): Promise<UserResponse> {
+  async create (@Body() body: CreateUserDTO): Promise<UserResponse> {
     const user = await this.authService.register(body);
     return UserMapper.getUserResponse(user);
   }
 
   @Get()
   @Access(Role.ADMIN)
-  async getAll(@Query() role?: RoleDTO): Promise<UserResponse[]> {
+  async getAll (@Query() role?: RoleDTO): Promise<UserResponse[]> {
     const users = await this.userService.getAllUsers(role);
     return UserMapper.getUsersResponse(users);
   }
 
   @Patch()
   @Access()
-  async update(@UserRequest() user: UserResponse, @Body() body: UpdateUserDTO): Promise<UserResponse> {
+  async update (@UserRequest() user: UserResponse, @Body() body: UpdateUserDTO): Promise<UserResponse> {
     const updatedUser = await this.userService.update(user.id, body);
+    return UserMapper.getUserResponse(updatedUser);
+  }
+
+  @Patch(':userId')
+  @Access(Role.ADMIN)
+  async updateUser (
+    @UserRequest() user: UserResponse,
+    @Param('userId', UserByIdPipe) userId: string,
+    @Body() body: RoleDTO,
+  ): Promise<UserResponse> {
+    const updatedUser = await this.userService.updateRole(user.id, userId, body.role);
     return UserMapper.getUserResponse(updatedUser);
   }
 
   @Post('vehicles')
   @Access()
-  addVehicle(@UserRequest() user: UserResponse, @Body() body: CreateVehicleDTO): Promise<Vehicle> {
+  addVehicle (@UserRequest() user: UserResponse, @Body() body: CreateVehicleDTO): Promise<Vehicle> {
     return this.userService.addVehicle(user.id, body);
   }
 

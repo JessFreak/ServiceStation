@@ -11,6 +11,7 @@
   top: 0;
   z-index: 1;
   min-width: 100vw;
+  color: white;
 }
 
 .header__logo {
@@ -24,8 +25,11 @@
 }
 
 .header__title {
-  color: #fff;
   font-size: 24px;
+}
+
+.header__title * {
+  color: white;
 }
 
 .header__nav {
@@ -71,7 +75,6 @@
   margin-right: 10px;
   border-radius: 50%;
   overflow: hidden;
-  color: #1e4549;
 }
 
 .user-info__avatar img {

@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import './Header.css';
 import { useUser } from '@/context/UserContext';
-import { roleTranslations } from '@/utils';
+import { roles } from '@/utils';
 
 const Header = ({ setIsSignup }) => {
   const { user } = useUser();
@@ -50,7 +50,7 @@ const Header = ({ setIsSignup }) => {
             <strong>
               {user.name} {user.surname}
             </strong>
-            <p className="user-info__role">{roleTranslations[user.role]}</p>
+            <p className="user-info__role">{roles.get(user.role)}</p>
           </div>
         </div>
       ) : (
