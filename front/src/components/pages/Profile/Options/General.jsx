@@ -76,6 +76,7 @@ const General = () => {
               placeholder="Ім'я"
               value={userData.name}
               onChange={handleChange}
+              required
             />
           </div>
           <div className="input-container">
@@ -87,6 +88,7 @@ const General = () => {
               placeholder="Прізвище"
               value={userData.surname}
               onChange={handleChange}
+              required
             />
           </div>
           <div className="input-container">
@@ -98,6 +100,7 @@ const General = () => {
               placeholder="Email"
               value={userData.email}
               onChange={handleChange}
+              required
             />
           </div>
           <div className="input-container">
@@ -124,7 +127,6 @@ const General = () => {
               src={userData.avatarUrl || `${process.env.PUBLIC_URL}/user.svg`}
               className="avatar-image"
               alt="Avatar"
-              onError={(e) => (e.target.src = `${process.env.PUBLIC_URL}/user.svg`)}
             />
           </div>
           <label htmlFor="file-upload" className="red-button">

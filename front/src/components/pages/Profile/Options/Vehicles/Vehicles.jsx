@@ -8,7 +8,7 @@ const Vehicles = () => {
   const [loading, setLoading] = useState(true);
   const [newVehicle, setNewVehicle] = useState(null);
 
-  const getVehicles = async () => {
+  const fetchVehicles = async () => {
     try {
       const response = await axiosInstance.get('users/vehicles');
       setVehicles(response.data);
@@ -18,7 +18,7 @@ const Vehicles = () => {
   };
 
   useEffect(() => {
-    getVehicles();
+    fetchVehicles();
   }, []);
 
   const handleUpdateVehicles = (updatedVehicle = null) => {
@@ -26,7 +26,7 @@ const Vehicles = () => {
       setNewVehicle(null);
       return;
     }
-    getVehicles();
+    fetchVehicles();
   };
 
   const handleAddVehicle = () => {

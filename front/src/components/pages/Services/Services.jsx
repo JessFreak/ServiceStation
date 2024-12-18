@@ -78,6 +78,11 @@ export const Services = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (selectedServices.length === 0) {
+      toast.error('Ви не обрали жодної послуги');
+      return;
+    }
+
     const orderDate = deserializeOrderDate(formData);
     const response = await axiosInstance.post('orders', {
       vehicleId: selectedVehicle.id,
@@ -115,7 +120,7 @@ export const Services = () => {
               </button>
             </div>
             <div className="service-card__image">
-              <img src={service.imageUrl} alt={service.name} />
+              <img src={service.imageUrl || `${process.env.PUBLIC_URL}/wrench.svg`} alt={service.name} />
             </div>
           </div>
         ))}

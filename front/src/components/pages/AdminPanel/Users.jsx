@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import MyModal from '@UI/MyModal';
 import RegisterForm from '@Components/pages/Auth/RegisterForm';
 
-const UsersTable = () => {
+const Users = () => {
   const [users, setUsers] = useState([]);
   const [activeRole, setActiveRole] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -80,7 +80,7 @@ const UsersTable = () => {
             <th>Ім'я</th>
             <th>Прізвище</th>
             <th>Email</th>
-            <th>Role</th>
+            <th>Роль</th>
           </tr>
           </thead>
           <tbody>
@@ -123,4 +123,4 @@ const UsersTable = () => {
   );
 };
 
-export default UsersTable;
+export default Users;

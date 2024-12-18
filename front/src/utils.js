@@ -34,7 +34,14 @@ export const roles = new Map([
 
 export const statusOptions = ['WAITING', 'PROCESSING', 'DONE', 'CANCELED'];
 
-export const getTodayString = () => new Date().toISOString().split('T')[0];
+export const getDateString = (date) =>
+  new Date(date).toLocaleDateString('uk', {
+  year: 'numeric',
+  month: 'numeric',
+  day: 'numeric',
+  hour: 'numeric',
+  minute: 'numeric',
+});
 
 export const getTomorrowString = () => {
   const today = new Date();

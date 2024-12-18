@@ -15,3 +15,22 @@
     gap: 20px;
     grid-template-columns: repeat(2, 1fr);
 }
+
+.service-form {
+    margin-top: 20px;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.service-form > :nth-child(5) {
+    grid-column: 1 / -1;
+}
+
+.service-form > :nth-child(6) {
+    grid-column: 1;
+}
+
+.service-form label {
+    color: #1e4549;
+}

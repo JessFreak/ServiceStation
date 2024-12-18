@@ -8,6 +8,11 @@
     color: #1e4549;
 }
 
+*::selection {
+    background-color: #1e4549;
+    color: white;
+}
+
 html, body {
     width: fit-content;
     height: fit-content;
@@ -123,10 +128,12 @@ label {
     cursor: pointer;
     transition: background-color 0.2s;
     padding: 13px 16px;
+    font-size: 15px;
 }
 
 .service-button * {
     color: white;
+    font-size: 1.3rem;
 }
 
 .service-button:hover {
@@ -139,7 +146,7 @@ label {
     margin: 0;
 }
 
-.input-container > input, .input-container > nav {
+.input-container > input, .input-container > nav, textarea {
     display: block;
     width: 100%;
     padding: 10px;
@@ -147,6 +154,13 @@ label {
     border-radius: 4px;
     margin: 5px 0 20px;
     font-size: 1rem;
+}
+
+textarea {
+    min-height: 10vh;
+    max-height: 16vh;
+    min-width: 16vw;
+    max-width: 40vw;
 }
 
 table {
@@ -176,8 +190,14 @@ tr:hover td {
     color: white;
 }
 
-table .red-button {
+table .red-button, table .service-button {
     margin: 0;
+}
+
+table img {
+    margin-left: 25%;
+    width: 50%;
+    height: 50%;
 }
 
 body > div > .order-history {
@@ -205,7 +225,7 @@ body > div > .order-history {
     width: 140px;
 }
 
-.filters input, .filters .dropdown, table .dropdown, .modal-form .dropdown {
+.filters input, .filters .dropdown, table .dropdown, .modal-form .dropdown, .service-form .dropdown {
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -213,4 +233,17 @@ body > div > .order-history {
 
 .filters .dropdown {
     min-width: 450px;
+}
+
+.id {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 120px;
+    overflow: hidden;
+}
+
+.id:hover {
+    white-space: normal;
+    max-width: none;
+    overflow: visible;
 }

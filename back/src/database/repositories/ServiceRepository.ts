@@ -11,7 +11,7 @@ export class ServiceRepository {
   }
 
   async findMany (where: Prisma.ServiceWhereInput): Promise<Service[]> {
-    return this.prisma.service.findMany({ where });
+    return this.prisma.service.findMany({ where, orderBy: { createdAt: 'desc' } });
   }
 
   async findById (id: string): Promise<Service> {

@@ -1,6 +1,6 @@
 import React from 'react';
 import './OrdersTable.css';
-import { serializeUser, statusOptions } from '@/utils';
+import { getDateString, serializeUser, statusOptions } from '@/utils';
 import Dropdown from '@UI/Dropdown/Dropdown';
 
 const OrdersTable = ({ orders, role, onCancelOrder, onStatusChange, onWorkerChange, workers }) => {
@@ -28,13 +28,7 @@ const OrdersTable = ({ orders, role, onCancelOrder, onStatusChange, onWorkerChan
         <tr key={order.id}>
           {isAdminOrder && <td>{order.id}</td>}
           <td>
-            {new Date(order.orderDate).toLocaleDateString('uk', {
-              year: 'numeric',
-              month: 'numeric',
-              day: 'numeric',
-              hour: 'numeric',
-              minute: 'numeric',
-            })}
+            {getDateString(order.orderDate)}
           </td>
           {!isUserOrder && (
             <td>

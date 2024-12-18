@@ -1,15 +1,16 @@
 import { useState } from 'react';
 import Sidebar from '@UI/Sidebar/Sidebar';
 import OrderHistory from '@Components/OrderHistory/OrderHistory';
-import UsersTable from '@Components/pages/AdminPanel/UsersTable';
+import Users from '@Components/pages/AdminPanel/Users';
 import './AdminPanel.css';
+import Services from '@Components/pages/AdminPanel/Services';
 
 const AdminPanel = () => {
   const [activeSidebarItem, setActiveSidebarItem] = useState('Замовлення');
   const options = [
     { name: 'Замовлення', icon: 'bx-cart', page: <OrderHistory role='ADMIN'/> },
-    { name: 'Послуги', icon: 'bx-wrench', page: <div>Послуги</div> },
-    { name: 'Користувачі', icon: 'bx-user', page: <UsersTable /> },
+    { name: 'Послуги', icon: 'bx-wrench', page: <Services /> },
+    { name: 'Користувачі', icon: 'bx-user', page: <Users /> },
   ];
 
   return (
