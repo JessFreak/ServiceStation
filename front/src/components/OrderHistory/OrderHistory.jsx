@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Dropdown from '@UI/Dropdown/Dropdown';
 import OrdersTable from '@Components/OrderHistory/OrdersTable/OrdersTable';
 import {
@@ -33,7 +33,7 @@ const OrderHistory = ({ role = 'USER', header = 'Історія послуг' })
 
   const [loading, setLoading] = useState(true);
 
-  const fetchFilters = async () => {
+  const fetchFilters = useCallback(async () => {
     setLoading(true);
     const services = await axiosInstance.get('services');
     setServices(services.data);
@@ -52,9 +52,9 @@ const OrderHistory = ({ role = 'USER', header = 'Історія послуг' })
     }
 
     setLoading(false);
-  };
+  }, [role]);
 
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     setLoading(true);
     let orders;
     if (role === 'USER') {
@@ -73,15 +73,15 @@ const OrderHistory = ({ role = 'USER', header = 'Історія послуг' })
 
     setOrders(orders.data);
     setLoading(false);
-  };
+  }, [filters, role]);
 
   useEffect(() => {
     fetchFilters();
-  }, []);
+  }, [fetchFilters]);
 
   useEffect(() => {
     fetchOrders();
-  }, [filters]);
+  }, [fetchOrders]);
 
   const vehicleOptions = vehicles.map(serializeVehicle);
   const userOptions = users.map(serializeUser);
@@ -196,7 +196,7 @@ const OrderHistory = ({ role = 'USER', header = 'Історія послуг' })
           placeholder="За статусом"
         />
         <input
-          className='date'
+          className="date"
           type="date"
           placeholder="За датою"
           min="2020-01-01"
@@ -204,7 +204,8 @@ const OrderHistory = ({ role = 'USER', header = 'Історія послуг' })
         />
       </div>
       <OrdersTable
-        orders={orders} role={role}
+        orders={orders}
+        role={role}
         onCancelOrder={handleCancelOrder}
         onStatusChange={handleStatusChange}
         workers={workerOptions}
