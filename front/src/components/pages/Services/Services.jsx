@@ -24,6 +24,7 @@ export const Services = () => {
     date: '',
     time: '08:00',
   });
+  const [totalPrice, setTotalPrice] = useState(0);
 
   const { user } = useUser();
 
@@ -47,6 +48,13 @@ export const Services = () => {
 
     fetchServices();
   }, [user]);
+
+  useEffect(() => {
+    if (selectedServices.length > 0) {
+      const total = selectedServices.reduce((acc, service) => acc + service.price, 0);
+      setTotalPrice(total);
+    }
+  }, [selectedServices]);
 
   const openModal = (service) => {
     setSelectedServices([service]);
@@ -79,7 +87,12 @@ export const Services = () => {
     e.preventDefault();
 
     if (selectedServices.length === 0) {
-      toast.error('Ви не обрали жодної послуги');
+      toast.error('Оберіть послуги для замовлення');
+      return;
+    }
+
+    if (!selectedVehicle) {
+      toast.error('Оберіть транспорт для замовлення');
       return;
     }
 
@@ -140,7 +153,7 @@ export const Services = () => {
                   options={vehicleOptions}
                   active={selectedVehicle ? serializeVehicle(selectedVehicle) : null}
                   setActive={handleVehicleSelect}
-                  placeholder='Обери необхідний транспорт'
+                  placeholder="Обери необхідний транспорт"
                 />
               </div>
               <div className="date-time">
@@ -179,6 +192,7 @@ export const Services = () => {
             <button className="service-button" type="submit">
               Замовити
             </button>
+            <h1>Сума: {totalPrice} грн</h1>
           </form>}
           {!user && <h2>Авторизуйтесь для виконання замовлення.</h2>}
           {!vehicles.length && <h2>Додайте транспорт у профіль для виконання замовлення.</h2>}
