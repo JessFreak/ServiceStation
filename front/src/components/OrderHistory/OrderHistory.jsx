@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Dropdown from '@UI/Dropdown/Dropdown';
 import OrdersTable from '@Components/OrderHistory/OrdersTable/OrdersTable';
 import {
@@ -10,6 +10,7 @@ import {
   statusOptions,
 } from '@/utils';
 import { toast } from 'react-toastify';
+import { Loading } from '@UI/Loading';
 
 const OrderHistory = ({ role = 'USER', header = 'Історія послуг' }) => {
   const [filters, setFilters] = useState({
@@ -158,6 +159,8 @@ const OrderHistory = ({ role = 'USER', header = 'Історія послуг' })
     await fetchOrders();
   };
 
+  if (loading) return <Loading />;
+
   return (
     <div className="order-history">
       <h1>{header}</h1>
@@ -200,18 +203,13 @@ const OrderHistory = ({ role = 'USER', header = 'Історія послуг' })
           onChange={(e) => setFilters({ ...filters, orderDay: e.target.value || null })}
         />
       </div>
-
-      {loading ? (
-        <p>Завантаження...</p>
-      ) : (
-        <OrdersTable
-          orders={orders} role={role}
-          onCancelOrder={handleCancelOrder}
-          onStatusChange={handleStatusChange}
-          workers={workerOptions}
-          onWorkerChange={handleAssignedChange}
-        />
-      )}
+      <OrdersTable
+        orders={orders} role={role}
+        onCancelOrder={handleCancelOrder}
+        onStatusChange={handleStatusChange}
+        workers={workerOptions}
+        onWorkerChange={handleAssignedChange}
+      />
     </div>
   );
 };

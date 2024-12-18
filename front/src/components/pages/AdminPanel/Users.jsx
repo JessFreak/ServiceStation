@@ -4,6 +4,7 @@ import Dropdown from '@UI/Dropdown/Dropdown';
 import { toast } from 'react-toastify';
 import MyModal from '@UI/MyModal';
 import RegisterForm from '@Components/pages/Auth/RegisterForm';
+import { Loading } from '@UI/Loading';
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -54,6 +55,8 @@ const Users = () => {
     toast.success('Користувача успішно створено.');
   };
 
+  if (loading) return <Loading />;
+
   return (
     <div className='vehicles'>
       <div className="vehicles-header">
@@ -70,44 +73,40 @@ const Users = () => {
           placeholder='За ролю'
         />
       </div>
-      {loading ? (
-        <p>Завантаження...</p>
-      ) : (
-        <table className='users-table'>
-          <thead>
-          <tr>
-            <th>Id</th>
-            <th>Ім'я</th>
-            <th>Прізвище</th>
-            <th>Email</th>
-            <th>Роль</th>
+      <table className='users-table'>
+        <thead>
+        <tr>
+          <th>Id</th>
+          <th>Ім'я</th>
+          <th>Прізвище</th>
+          <th>Email</th>
+          <th>Роль</th>
+        </tr>
+        </thead>
+        <tbody>
+        {users.map((user) => (
+          <tr key={user.id}>
+            {<td className='id'>{user.id}</td>}
+            {<td>{user.name}</td>}
+            {<td>{user.surname}</td>}
+            {<td>{user.email}</td>}
+            {<td>
+              <Dropdown
+                options={Array.from(roles.values())}
+                active={roles.get(user.role)}
+                setActive={(newRole) => handleRoleChange(user.id, newRole)}
+              />
+            </td>
+            }
           </tr>
-          </thead>
-          <tbody>
-          {users.map((user) => (
-            <tr key={user.id}>
-              {<td className='id'>{user.id}</td>}
-              {<td>{user.name}</td>}
-              {<td>{user.surname}</td>}
-              {<td>{user.email}</td>}
-              {<td>
-                <Dropdown
-                  options={Array.from(roles.values())}
-                  active={roles.get(user.role)}
-                  setActive={(newRole) => handleRoleChange(user.id, newRole)}
-                />
-              </td>
-              }
-            </tr>
-          ))}
-          {users.length === 0 && (
-            <tr>
-              <td colSpan="8" className="no-data">Користувачів не знайдено.</td>
-            </tr>
-          )}
-          </tbody>
-        </table>
-      )}
+        ))}
+        {users.length === 0 && (
+          <tr>
+            <td colSpan="8" className="no-data">Користувачів не знайдено.</td>
+          </tr>
+        )}
+        </tbody>
+      </table>
       <MyModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <h1>Створення користувача</h1>
         <div className='modal-form'>

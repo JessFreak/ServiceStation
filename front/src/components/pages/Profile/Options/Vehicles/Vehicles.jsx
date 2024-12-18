@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import VehicleInfo from './VehicleInfo/VehicleInfo';
 import './Vehicles.css';
 import { axiosInstance } from '@/utils';
+import { Loading } from '@UI/Loading';
 
 const Vehicles = () => {
   const [vehicles, setVehicles] = useState([]);
@@ -38,9 +39,7 @@ const Vehicles = () => {
     });
   };
 
-  if (loading) {
-    return <h1>Завантаження...</h1>;
-  }
+  if (loading) return <Loading />;
 
   return (
     <div className="vehicles">

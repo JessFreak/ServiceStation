@@ -247,3 +247,9 @@ body > div > .order-history {
     max-width: none;
     overflow: visible;
 }
+
+.loading {
+    margin-top: 20px;
+    text-align: center;
+    color: #3498db;
+}

@@ -11,6 +11,7 @@ import FilterableMultiSelect from '@UI/FilterableMultiSelect/FilterableMultiSele
 import { toast } from 'react-toastify';
 import Dropdown from '@UI/Dropdown/Dropdown';
 import { useUser } from '@/context/UserContext';
+import { Loading } from '@UI/Loading';
 
 export const Services = () => {
   const [services, setServices] = useState([]);
@@ -109,9 +110,7 @@ export const Services = () => {
     closeModal();
   };
 
-  if (loading) {
-    return <div className="services__loading">Завантаження...</div>;
-  }
+  if (loading) return <Loading />;
 
   const vehicleOptions = vehicles.map(serializeVehicle);
 
