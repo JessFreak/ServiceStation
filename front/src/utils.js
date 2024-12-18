@@ -32,6 +32,21 @@ export const roles = new Map([
   ['WORKER', 'Працівник'],
 ]);
 
+export const vehicleTypes = new Map([
+  ['CAR', 'Легковий автомобіль'],
+  ['TRUCK', 'Вантажівка'],
+  ['MOTORCYCLE', 'Мотоцикл'],
+  ['BUS', 'Автобус'],
+  ['VAN', 'Фургон'],
+]);
+
+export const statuses = new Map([
+  ['WAITING', 'Очікування'],
+  ['PROCESSING', 'В обробці'],
+  ['DONE', 'Завершено'],
+  ['CANCELED', 'Скасовано'],
+]);
+
 export const statusOptions = ['WAITING', 'PROCESSING', 'DONE', 'CANCELED'];
 
 export const getDateString = (date) =>

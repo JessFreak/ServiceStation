@@ -1,6 +1,6 @@
 import React from 'react';
 import './OrdersTable.css';
-import { getDateString, serializeUser, statusOptions } from '@/utils';
+import { getDateString, serializeUser, statuses } from '@/utils';
 import Dropdown from '@UI/Dropdown/Dropdown';
 
 const OrdersTable = ({ orders, role, onCancelOrder, onStatusChange, onWorkerChange, workers }) => {
@@ -28,12 +28,13 @@ const OrdersTable = ({ orders, role, onCancelOrder, onStatusChange, onWorkerChan
         <span className={`status ${order.status.replace(' ', '-')}`}>
           {isWorkerOrder ? (
             <Dropdown
-              options={statusOptions}
-              active={order.status}
-              setActive={(status) => onStatusChange(order.id, status)}
+              isActive={order.status !== 'CANCELED'}
+              options={Array.from(statuses.values())}
+              active={statuses.get(order.status)}
+              setActive={(status) => onStatusChange(order.id, statuses.getKey(status))}
             />
           ) : (
-            order.status
+            statuses.get(order.status)
           )}
         </span>
       </td>

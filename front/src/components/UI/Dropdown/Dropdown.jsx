@@ -1,7 +1,7 @@
 import React from 'react';
 import './Dropdown.css';
 
-const Dropdown = ({ options, active, setActive, placeholder = 'Обери опцію' }) => {
+const Dropdown = ({ options, active, setActive, placeholder = 'Обери опцію', isActive = true }) => {
   if (!options.length) {
     return null;
   }
@@ -18,19 +18,21 @@ const Dropdown = ({ options, active, setActive, placeholder = 'Обери опц
           <button type="button" className="dropdown-toggle">
             {active || placeholder}
           </button>
-          <ul className="dropdown-menu">
-            {options.map((item, index) => (
-              <li key={index}>
-                <button
-                  type="button"
-                  onClick={(e) => handleItemClick(e, item)}
-                  className={active === item ? 'active' : ''}
-                >
-                  {item}
-                </button>
-              </li>
-            ))}
-          </ul>
+          {isActive && (
+            <ul className="dropdown-menu">
+              {options.map((item, index) => (
+                <li key={index}>
+                  <button
+                    type="button"
+                    onClick={(e) => handleItemClick(e, item)}
+                    className={active === item ? 'active' : ''}
+                  >
+                    {item}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
         </li>
       </ul>
     </nav>

@@ -7,7 +7,7 @@ import {
   getUserId,
   serializeUser,
   serializeVehicle,
-  statusOptions,
+  statuses,
 } from '@/utils';
 import { toast } from 'react-toastify';
 import { Loading } from '@UI/Loading';
@@ -190,9 +190,9 @@ const OrderHistory = ({ role = 'USER', header = 'Історія послуг' })
           placeholder="За транспортом"
         />
         <Dropdown
-          options={statusOptions}
-          active={filters.status}
-          setActive={(status) => setFilters({ ...filters, status })}
+          options={Array.from(statuses.values())}
+          active={statuses.get(filters.status)}
+          setActive={(status) => setFilters({ ...filters, status: statuses.getKey(status) })}
           placeholder="За статусом"
         />
         <input

@@ -3,7 +3,7 @@ import Dropdown from '@UI/Dropdown/Dropdown';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './VehicleInfo.css';
-import { axiosInstance } from '@/utils';
+import { axiosInstance, vehicleTypes } from '@/utils';
 
 function VehicleInfo({ initial, onVehicleUpdate, setNewVehicle }) {
   const [carData, setCarData] = useState(initial);
@@ -15,8 +15,6 @@ function VehicleInfo({ initial, onVehicleUpdate, setNewVehicle }) {
       [event.target.name]: event.target.value,
     });
   };
-
-  const menuItems = ['CAR', 'TRUCK', 'MOTORCYCLE', 'BUS', 'VAN'];
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -66,9 +64,9 @@ function VehicleInfo({ initial, onVehicleUpdate, setNewVehicle }) {
       <div>
         <i className="bx bx-car"></i>
         <Dropdown
-          options={menuItems}
-          active={active}
-          setActive={setActive}
+          options={Array.from(vehicleTypes.values())}
+          active={vehicleTypes.get(active)}
+          setActive={(type) => setActive(vehicleTypes.getKey(type))}
           placeholder='Тип транспорту'
         />
       </div>
