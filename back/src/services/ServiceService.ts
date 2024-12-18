@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ServiceRepository } from '../database/repositories/ServiceRepository';
-import { CreateServiceDTO, IsActiveDTO, UpdateServiceDTO } from '../utils/dtos/ServiceDTO';
+import { CreateServiceDTO, ServiceQueryDTO, UpdateServiceDTO } from '../utils/dtos/ServiceDTO';
 import { Service } from '@prisma/client';
 
 @Injectable()
@@ -11,8 +11,14 @@ export class ServiceService {
     return this.serviceRepository.create(data);
   }
 
-  async getAll({ isActive }: IsActiveDTO): Promise<Service[]> {
-    return this.serviceRepository.findMany({ isActive });
+  async getAll({ isActive, name, minPrice, maxPrice }: ServiceQueryDTO): Promise<Service[]> {
+    if (maxPrice < minPrice) return [];
+
+    return this.serviceRepository.findMany({
+      isActive,
+      name: { contains: name },
+      price: { gte: minPrice, lte: maxPrice },
+    });
   }
 
   async updateById (id: string, data: UpdateServiceDTO): Promise<Service> {
