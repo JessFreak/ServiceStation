@@ -16,7 +16,7 @@ const OrdersTable = ({ orders, role, onCancelOrder, onStatusChange, onWorkerChan
         <th>Дата замовлення</th>
         {!isUserOrder && <th>Замовник</th>}
         <th>Транспорт</th>
-        <th>Послуга</th>
+        <th>Послуги</th>
         {!isWorkerOrder && <th>Відповідальний</th>}
         <th>Статус</th>
         <th>Ціна</th>
@@ -26,7 +26,7 @@ const OrdersTable = ({ orders, role, onCancelOrder, onStatusChange, onWorkerChan
       <tbody>
       {orders.map((order) => (
         <tr key={order.id}>
-          {isAdminOrder && <td>{order.id}</td>}
+          {isAdminOrder && <td className='id'>{order.id}</td>}
           <td>
             {getDateString(order.orderDate)}
           </td>
