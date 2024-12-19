@@ -104,12 +104,12 @@ export const Services = () => {
     e.preventDefault();
 
     if (selectedServices.length === 0) {
-      toast.error('Оберіть послуги для замовлення');
+      toast.error('Оберіть послуги для замовлення.');
       return;
     }
 
     if (!selectedVehicle) {
-      toast.error('Оберіть транспорт для замовлення');
+      toast.error('Оберіть транспорт для замовлення.');
       return;
     }
 
@@ -122,7 +122,7 @@ export const Services = () => {
 
     if (hasError(response)) return;
 
-    toast.success('Замовлення створено');
+    toast.success('Замовлення створено.');
     closeModal();
   };
 

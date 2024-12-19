@@ -18,7 +18,11 @@ axiosInstance.interceptors.response.use(
 export const getErrorMessage = (error) => {
   const message = error.response?.data?.message;
 
-  return typeof message === 'string' ? message : message.join(', ');
+  if (typeof message === 'string') {
+    return `${message}.`;
+  }
+
+  return message.join(', ') + '.';
 };
 
 export const hasError = (response) => 'error' in response;
