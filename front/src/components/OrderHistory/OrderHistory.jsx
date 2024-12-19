@@ -35,44 +35,48 @@ const OrderHistory = ({ role = 'USER', header = 'Історія послуг' })
 
   const fetchFilters = useCallback(async () => {
     setLoading(true);
-    const services = await axiosInstance.get('services');
-    setServices(services.data);
+    setTimeout(async () => {
+      const services = await axiosInstance.get('services');
+      setServices(services.data);
 
-    if (role === 'USER') {
-      const vehicles = await axiosInstance.get('users/vehicles');
-      setVehicles(vehicles.data);
-    } else if (role === 'ADMIN') {
-      const workers = await axiosInstance.get('users', {
-        params: { role: 'WORKER' },
-      });
-      setWorkers(workers.data);
+      if (role === 'USER') {
+        const vehicles = await axiosInstance.get('users/vehicles');
+        setVehicles(vehicles.data);
+      } else if (role === 'ADMIN') {
+        const workers = await axiosInstance.get('users', {
+          params: { role: 'WORKER' },
+        });
+        setWorkers(workers.data);
 
-      const users = await axiosInstance.get('users');
-      setUsers(users.data);
-    }
+        const users = await axiosInstance.get('users');
+        setUsers(users.data);
+      }
 
-    setLoading(false);
+      setLoading(false);
+    }, 0);
   }, [role]);
 
   const fetchOrders = useCallback(async () => {
     setLoading(true);
-    let orders;
-    if (role === 'USER') {
-      orders = await axiosInstance.get('users/orders', {
-        params: { ...filters },
-      });
-    } else if (role === 'WORKER') {
-      orders = await axiosInstance.get('orders/assigned', {
-        params: { ...filters },
-      });
-    } else if (role === 'ADMIN') {
-      orders = await axiosInstance.get('orders', {
-        params: { ...filters },
-      });
-    }
+    setTimeout(async () => {
+      let orders;
+      if (role === 'USER') {
+        orders = await axiosInstance.get('users/orders', {
+          params: { ...filters },
+        });
+      } else if (role === 'WORKER') {
+        orders = await axiosInstance.get('orders/assigned', {
+          params: { ...filters },
+        });
+      } else if (role === 'ADMIN') {
+        orders = await axiosInstance.get('orders', {
+          params: { ...filters },
+        });
+      }
 
-    setOrders(orders.data);
-    setLoading(false);
+      setOrders(orders.data);
+      setLoading(false);
+    }, 500);
   }, [filters, role]);
 
   useEffect(() => {
