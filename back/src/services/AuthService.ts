@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Injectable,
 } from '@nestjs/common';
 import { compare, hash } from 'bcrypt';
@@ -14,6 +13,7 @@ import { PasswordRepeatException } from '../utils/exceptions/PasswordRepeatExcep
 import { UpdatePasswordDto } from '../utils/dtos/ChangePasswordDTO';
 import { User } from '@prisma/client';
 import { UpdateUserDTO } from '../utils/dtos/UserDTO';
+import { InvalidPasswordException } from '../utils/exceptions/InvalidPasswordException';
 
 @Injectable()
 export class AuthService {
@@ -35,7 +35,7 @@ export class AuthService {
 
   private async validatePassword (password: string, userPassword: string): Promise<void> {
     const isPasswordsMatch = await compare(password, userPassword);
-    if (!isPasswordsMatch) throw new BadRequestException('Invalid password');
+    if (!isPasswordsMatch) throw new InvalidPasswordException();
   }
 
   getToken (userId: string): string {

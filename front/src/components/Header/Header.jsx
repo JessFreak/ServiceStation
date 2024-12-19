@@ -41,7 +41,7 @@ const Header = ({ setIsSignup }) => {
         <div className="header__user-info" onClick={handleProfileClick}>
           <div className="user-info__avatar">
             <img
-              src={user.avatarUrl}
+              src={user.avatarUrl || ''}
               alt="Avatar"
               onError={(e) => (e.target.src = `${process.env.PUBLIC_URL}/user.svg`)}
             />

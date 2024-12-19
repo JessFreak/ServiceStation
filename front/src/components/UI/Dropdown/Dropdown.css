@@ -82,7 +82,7 @@ a:hover {
     transition: all 0.5s ease;
 }
 
-.dropdown-menu input {
+.dropdown-menu > input {
     position: relative;
     margin: 10px;
     width: calc(100% - 20px);

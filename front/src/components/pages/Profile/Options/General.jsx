@@ -124,9 +124,10 @@ const General = () => {
         <div className="avatar-section">
           <div className="avatar-placeholder">
             <img
-              src={userData.avatarUrl || `${process.env.PUBLIC_URL}/user.svg`}
+              src={userData.avatarUrl}
               className="avatar-image"
               alt="Avatar"
+              onError={(e) => (e.target.src = `${process.env.PUBLIC_URL}/user.svg`)}
             />
           </div>
           <label htmlFor="file-upload" className="red-button">
