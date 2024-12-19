@@ -11,7 +11,7 @@ const General = () => {
     surname: '',
     email: '',
     phone: '',
-    avatarUrl: '',
+    avatarUrl: null,
   });
 
   useEffect(() => {
@@ -21,7 +21,7 @@ const General = () => {
         surname: user.surname || '',
         email: user.email || '',
         phone: user.phone || '',
-        avatarUrl: user.avatarUrl || '',
+        avatarUrl: user.avatarUrl || null,
       });
     }
   }, [user]);
