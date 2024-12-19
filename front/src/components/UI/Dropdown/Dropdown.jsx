@@ -19,7 +19,7 @@ const Dropdown = ({ options, active, setActive, placeholder = 'Обери опц
     setFilteredOptions(filtered);
   };
 
-  const isOverflowing = filteredOptions.length > 5;
+  const isOverflowing = options.length > 5;
 
   return (
     <nav className="dropdown">
