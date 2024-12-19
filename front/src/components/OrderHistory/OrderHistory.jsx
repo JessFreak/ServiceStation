@@ -204,6 +204,7 @@ const OrderHistory = ({ role = 'USER', header = 'Історія послуг' })
           type="date"
           placeholder="За датою"
           min="2020-01-01"
+          value={filters.orderDay}
           onChange={(e) => setFilters({ ...filters, orderDay: e.target.value || null })}
         />
       </div>
