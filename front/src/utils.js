@@ -29,6 +29,7 @@ export const hasError = (response) => 'error' in response;
 
 export const hasAccessToken = () => document.cookie.includes('access_token');
 
+// eslint-disable-next-line no-extend-native
 Map.prototype.getKey = function(value) {
   for (const [key, val] of this) {
     if (val === value) {
