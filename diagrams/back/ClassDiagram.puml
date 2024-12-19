@@ -10,28 +10,29 @@ class AppModule {
 
 class AuthController {
   + auth(): void
-  + googleAuthCallback(user: User, res: Response): Response
-  + register(body: RegisterDto): void
-  + login(body: LoginDto, res: Response): Response
+  + googleAuthCallback(user: User, res: Response): void
+  + register(body: RegisterDTO): void
+  + login(body: LoginDTO): { token: string }
   + logout(res: Response): Response
   + getMe(user: User): User
-  + deleteMe(user: User, res: Response): Response
-  + updatePassword(user: User, body: UpdatePasswordDto): void
+  + deleteMe(user: User, res: Response): Promise<Response>
+  + updatePassword(user: User, body: UpdatePasswordDto): Promise<void>
+  + hasPassword(user: User): Promise<boolean>
 }
 
 class OrderController {
-  + create(body: CreateOrderDto): Order
-  + getAll(query: GetOrdersQueryDto, serviceId: string, userId: string): Order[]
-  + getAllAssigned(user: User, query: GetAssignedOrdersDto): Order[]
-  + updateWorker(orderId: string, body: UpdateWorkerDto, workerId: string): Order
-  + updateStatus(orderId: string, body: UpdateStatusDto): Order
+  + create(body: CreateOrderDTO): OrderResponse
+  + getAll(query: OrderQueryDTO, serviceId: string, userId: string): OrderResponse[]
+  + getAllAssigned(user: User, query: OrderQueryDTO): OrderResponse[]
+  + updateWorker(orderId: string, body: WorkerDTO, workerId: string): OrderResponse
+  + updateStatus(orderId: string, body: StatusDTO): OrderResponse
 }
 
 class ServiceController {
-  + create(body: CreateServiceDto): Service
-  + getAll(isActive: boolean): Service[]
-  + update(serviceId: string, body: UpdateServiceDto): Service
-  + delete(serviceId: string): void
+  + create(body: CreateServiceDTO): Service
+  + getAll(query: ServiceQueryDTO): Service[]
+  + update(serviceId: string, body: UpdateServiceDTO): Service
+  + delete(serviceId: string): Service
 }
 
 class UserController {
@@ -69,71 +70,78 @@ class UserModule {
 }
 
 class AuthService {
-  + register(user: RegisterDto): User
-  + validatePassword(password: string, userPassword: string): boolean
-  + login(credentials: LoginDto): LoginResponse
-  + validateGoogleUser(googleUser: GoogleUserDto): User
-  + setToken(userId: string, res: Response): Response
+  + register(user: RegisterDTO): User
+  + validatePassword(password: string, userPassword: string): void
+  + getToken(userId: string): string
+  + login(body: LoginDTO): { id: string }
+  + validateGoogleUser(googleUser: GoogleUser): User
+  + setToken(userId: string, res: Response): void
   + logout(res: Response): Response
   + deleteMe(userId: string, res: Response): Response
   + updatePassword(userId: string, body: UpdatePasswordDto): void
+  + checkIfEmailOrPhoneExist(body: UpdateUserDTO, userId: string): void
+  + hasPassword(userId: string): boolean
 }
 
 class OrderService {
-  + create(data: CreateOrderDto): Order
+  + create(data: CreateOrderDTO): OrderDB
   + findAvailableWorker(orderDate: string): Worker
-  + getAll(query: GetOrdersQueryDto): Order[]
-  + updateWorker(id: string, workerId: string): Order
-  + updateStatus(id: string, status: OrderStatus): Order
+  + getAll(query: OrderQueryDTO): OrderDB[]
+  + updateWorker(id: string, workerId: string): OrderDB
+  + updateStatus(id: string, status: Status): OrderDB
+  + cancel(userId: string, id: string): OrderDB
 }
 
 class ServiceService {
-  + create(data: CreateServiceDto): Service
-  + getAll(filter: ServiceFilterDto): Service[]
-  + updateById(id: string, data: UpdateServiceDto): Service
-  + deleteById(id: string): void
+  + create(data: CreateServiceDTO): Service
+  + getAll(query: ServiceQueryDTO): Service[]
+  + updateById(id: string, data: UpdateServiceDTO): Service
+  + deleteById(id: string): Service
 }
 
 class UserService {
-  + getAllUsers(filter: UserFilterDto): User[]
-  + update(id: string, data: UpdateUserDto): User
-  + addVehicle(userId: string, data: AddVehicleDto): Vehicle
-  + getUserVehicles(userId: string): Vehicle[]
-  + updateVehicle(userId: string, vehicleId: string, data: UpdateVehicleDto): Vehicle
+  + getAllUsers(role: RoleDTO): User[]
+  + update(id: string, data: UpdateUserDTO): User
+  + updateRole(adminId: string, id: string, role: Role): User
+  + addVehicle(id: string, data: CreateVehicleDTO): Vehicle
+  + getUserVehicles(id: string): Vehicle[]
+  + updateVehicle(id: string, vehicleId: string, data: UpdateVehicleDTO): Vehicle
+  + deleteVehicle(id: string, vehicleId: string): Vehicle
 }
 
 class OrderRepository {
-  + include: object
-  + create(data: Order): Order
-  + findMany(where: OrderFilterDto): Order[]
-  + findById(id: string): Order
-  + updateById(id: string, data: UpdateOrderDto): Order
+  + create(data: Prisma.OrderUncheckedCreateInput): OrderDB
+  + findMany(where: Prisma.OrderWhereInput): OrderDB[]
+  + findById(id: string): OrderDB
+  + updateById(id: string, data: Prisma.OrderUncheckedUpdateInput): OrderDB
 }
 
 class ServiceRepository {
-  + create(data: Service): Service
-  + findMany(where: ServiceFilterDto): Service[]
+  + create(data: Prisma.ServiceUncheckedCreateInput): Service
+  + findMany(where: Prisma.ServiceWhereInput): Service[]
   + findById(id: string): Service
-  + updateById(id: string, data: UpdateServiceDto): Service
-  + deleteById(id: string): void
+  + updateById(id: string, data: Prisma.ServiceUncheckedUpdateInput): Service
+  + deleteById(id: string): Service
 }
 
 class UserRepository {
-  + create(data: User): User
-  + find(where: UserFilterDto): User
+  + create(data: Prisma.UserUncheckedCreateInput): User
+  + find(where: Prisma.UserWhereInput): User
   + findById(id: string): User
   + findByEmail(email: string): User
-  + findMany(args: object): User[]
-  + updateById(id: string, data: UpdateUserDto): User
-  + deleteById(id: string): void
+  + findByPhone(phone: string): User
+  + findMany(args: Prisma.UserFindManyArgs): User[] | Worker[]
+  + updateById(id: string, data: Prisma.UserUncheckedUpdateInput): User
+  + deleteById(id: string): User
 }
 
 class VehicleRepository {
-  + create(data: Vehicle): Vehicle
-  + findMany(where: VehicleFilterDto): Vehicle[]
+  + create(data: Prisma.VehicleUncheckedCreateInput): Vehicle
+  + findMany(where: Prisma.VehicleWhereInput): Vehicle[]
   + findById(id: string): Vehicle
-  + find(where: object): Vehicle
-  + updateById(id: string, data: UpdateVehicleDto): Vehicle
+  + find(where: Prisma.VehicleWhereInput): Vehicle
+  + updateById(id: string, data: Prisma.VehicleUncheckedUpdateInput): Vehicle
+  + deleteById(id: string): Vehicle
 }
 
 class OrderByIdPipe {
