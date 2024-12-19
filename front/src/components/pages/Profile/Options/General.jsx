@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useUser } from '@/context/UserContext';
-import { axiosInstance } from '@/utils';
+import { axiosInstance, hasError } from '@/utils';
 
 const General = () => {
   const { user, setUser } = useUser();
@@ -55,7 +55,7 @@ const General = () => {
     e.preventDefault();
 
     const response = await axiosInstance.patch(`users`, userData);
-    if (response.error) return;
+    if (hasError(response)) return;
 
     setUser(response.data);
 

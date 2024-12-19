@@ -1,8 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
-import { hasAccessToken } from '@/utils';
+import { axiosInstance, hasAccessToken, hasError } from '@/utils';
 
-const UserContext = createContext();
+const UserContext = createContext(null);
 
 export const useUser = () => useContext(UserContext);
 
@@ -14,10 +13,8 @@ export const UserProvider = ({ children }) => {
 
     const fetchUserData = async () => {
       if (has) {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/auth/me`, {
-          withCredentials: true,
-        });
-        if (response.error) {
+        const response = await axiosInstance.get('auth/me');
+        if (hasError(response)) {
           document.cookie = '';
           return;
         }
@@ -26,7 +23,7 @@ export const UserProvider = ({ children }) => {
       }
     };
 
-    fetchUserData();
+    fetchUserData().then();
   }, []);
 
   return (

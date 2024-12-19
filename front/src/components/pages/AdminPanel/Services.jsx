@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { axiosInstance, getDateString } from '@/utils';
+import { axiosInstance, getDateString, hasError } from '@/utils';
 import MyModal from '@UI/MyModal';
 import ServiceForm from '@Components/pages/AdminPanel/ServiceForm';
 import { toast } from 'react-toastify';
@@ -21,7 +21,7 @@ const Services = () => {
     const response = await axiosInstance.get('services', {
       params: filters,
     });
-    if (response.error) return;
+    if (hasError(response)) return;
 
     setServices(response.data);
     setLoading(false);
@@ -31,7 +31,7 @@ const Services = () => {
     if (debounceTimer) clearTimeout(debounceTimer);
 
     const timer = setTimeout(() => {
-      fetchServices();
+      fetchServices().then();
     }, 500);
 
     setDebounceTimer(timer);
@@ -46,7 +46,7 @@ const Services = () => {
     } else {
       response = await axiosInstance.post('services', selectedService);
     }
-    if (response.error) return;
+    if (hasError(response)) return;
 
     toast.success(`Послуга успішно ${selectedService?.id ? 'оновлена' : 'створена'}.`);
 

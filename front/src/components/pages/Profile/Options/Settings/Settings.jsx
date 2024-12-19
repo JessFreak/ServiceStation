@@ -1,7 +1,7 @@
 import './Settings.css';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { axiosInstance } from '@/utils';
+import { axiosInstance, hasError } from '@/utils';
 import MyModal from '@UI/MyModal';
 
 const Settings = () => {
@@ -20,7 +20,7 @@ const Settings = () => {
   };
 
   useEffect(() => {
-    fetchHasPassword();
+    fetchHasPassword().then();
   }, []);
 
   const handleSubmit = async (event) => {
@@ -35,7 +35,7 @@ const Settings = () => {
       oldPassword: hasPassword ? formData.password : '',
       newPassword: formData.newPassword,
     });
-    if (response.error) return;
+    if (hasError(response)) return;
 
     toast.success('Пароль успішно змінено.');
     await fetchHasPassword();

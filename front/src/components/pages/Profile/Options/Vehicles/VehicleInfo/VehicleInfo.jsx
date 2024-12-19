@@ -3,7 +3,7 @@ import Dropdown from '@UI/Dropdown/Dropdown';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './VehicleInfo.css';
-import { axiosInstance, vehicleTypes } from '@/utils';
+import { axiosInstance, hasError, vehicleTypes } from '@/utils';
 
 function VehicleInfo({ initial, onVehicleUpdate, setNewVehicle }) {
   const [carData, setCarData] = useState(initial);
@@ -30,7 +30,7 @@ function VehicleInfo({ initial, onVehicleUpdate, setNewVehicle }) {
         ...carData,
         type: active,
       });
-      if (response.error) return;
+      if (hasError(response)) return;
 
       toast.success('Транспорт оновлено успішно.');
     } else {
@@ -38,7 +38,7 @@ function VehicleInfo({ initial, onVehicleUpdate, setNewVehicle }) {
         ...carData,
         type: active,
       });
-      if (response.error) return;
+      if (hasError(response)) return;
 
       onVehicleUpdate();
       setNewVehicle(null);
@@ -52,7 +52,7 @@ function VehicleInfo({ initial, onVehicleUpdate, setNewVehicle }) {
     if (!initial.id) return;
 
     const response = await axiosInstance.delete(`users/vehicles/${carData.id}`);
-    if (response.error) return;
+    if (hasError(response)) return;
 
     toast.success('Транспорт видалено успішно.');
     onVehicleUpdate(null);

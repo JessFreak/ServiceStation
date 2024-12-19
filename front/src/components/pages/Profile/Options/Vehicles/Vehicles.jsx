@@ -19,7 +19,7 @@ const Vehicles = () => {
   };
 
   useEffect(() => {
-    fetchVehicles();
+    fetchVehicles().then();
   }, []);
 
   const handleUpdateVehicles = (updatedVehicle = null) => {
@@ -27,7 +27,7 @@ const Vehicles = () => {
       setNewVehicle(null);
       return;
     }
-    fetchVehicles();
+    fetchVehicles().then();
   };
 
   const handleAddVehicle = () => {

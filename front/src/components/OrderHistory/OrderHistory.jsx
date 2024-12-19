@@ -80,11 +80,11 @@ const OrderHistory = ({ role = 'USER', header = 'Історія послуг' })
   }, [filters, role]);
 
   useEffect(() => {
-    fetchFilters();
+    fetchFilters().then();
   }, [fetchFilters]);
 
   useEffect(() => {
-    fetchOrders();
+    fetchOrders().then();
   }, [fetchOrders]);
 
   const vehicleOptions = vehicles.map(serializeVehicle);

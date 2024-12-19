@@ -4,7 +4,7 @@ import GoogleLogo from './GoogleLogo.svg';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
-import { axiosInstance } from '@/utils';
+import { axiosInstance, hasError } from '@/utils';
 import RegisterForm from '@Components/pages/Auth/RegisterForm';
 
 const Auth = ({ isSignup, setIsSignup }) => {
@@ -33,7 +33,7 @@ const Auth = ({ isSignup, setIsSignup }) => {
     e.preventDefault();
 
     const response = await axiosInstance.post('auth/register', formData);
-    if (response.error) return;
+    if (hasError(response)) return;
 
     toggleForm();
     toast.success('Реєстрація успішна. Ви можете увійти.');
@@ -47,7 +47,7 @@ const Auth = ({ isSignup, setIsSignup }) => {
     const loginData = { email, password };
 
     const response = await axiosInstance.post('auth/login', loginData);
-    if (response.error) return;
+    if (hasError(response)) return;
 
     const { token } = response.data;
     document.cookie = `access_token=${token};`;

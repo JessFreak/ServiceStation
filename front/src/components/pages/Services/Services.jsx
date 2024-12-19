@@ -3,7 +3,7 @@ import './Services.css';
 import {
   axiosInstance,
   deserializeOrderDate, deserializeVehicle,
-  getTomorrowString,
+  getTomorrowString, hasError,
   serializeVehicle
 } from '@/utils';
 import MyModal from '@UI/MyModal';
@@ -43,7 +43,7 @@ export const Services = () => {
   }
 
   useEffect(() => {
-    fetchVehicles();
+    fetchVehicles().then();
   }, [user]);
 
   const fetchServices = async () => {
@@ -60,7 +60,7 @@ export const Services = () => {
     if (debounceTimer) clearTimeout(debounceTimer);
 
     const timer = setTimeout(() => {
-      fetchServices();
+      fetchServices().then();
     }, 500);
 
     setDebounceTimer(timer);
@@ -120,7 +120,7 @@ export const Services = () => {
       orderDate,
     });
 
-    if (response.error) return;
+    if (hasError(response)) return;
 
     toast.success('Замовлення створено');
     closeModal();

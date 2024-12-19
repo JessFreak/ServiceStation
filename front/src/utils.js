@@ -15,6 +15,14 @@ axiosInstance.interceptors.response.use(
   }
 );
 
+export const getErrorMessage = (error) => {
+  const message = error.response?.data?.message;
+
+  return typeof message === 'string' ? message : message.join(', ');
+};
+
+export const hasError = (response) => 'error' in response;
+
 export const hasAccessToken = () => document.cookie.includes('access_token');
 
 Map.prototype.getKey = function(value) {
@@ -46,8 +54,6 @@ export const statuses = new Map([
   ['DONE', 'Завершено'],
   ['CANCELED', 'Скасовано'],
 ]);
-
-export const statusOptions = ['WAITING', 'PROCESSING', 'DONE', 'CANCELED'];
 
 export const getDateString = (date) =>
   new Date(date).toLocaleDateString('uk', {
@@ -93,9 +99,3 @@ export const getUserId = (userName, users) => {
   const worker = users.find((user) => user.email === email);
   return worker.id;
 }
-
-export const getErrorMessage = (error) => {
-  const message = error.response?.data?.message;
-
-  return typeof message === 'string' ? message : message.join(', ');
-};

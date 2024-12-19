@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { axiosInstance, roles } from '@/utils';
+import { axiosInstance, hasError, roles } from '@/utils';
 import Dropdown from '@UI/Dropdown/Dropdown';
 import { toast } from 'react-toastify';
 import MyModal from '@UI/MyModal';
@@ -20,14 +20,14 @@ const Users = () => {
     const response = await axiosInstance.get('users', {
       params: { role: roles.getKey(activeRole) },
     });
-    if (response.error) return;
+    if (hasError(response)) return;
 
     setUsers(response.data);
     setLoading(false);
   };
 
   useEffect(() => {
-    fetchUsers();
+    fetchUsers().then();
   }, [activeRole]);
 
   const handleRoleChange = async (userId, newRole) => {
@@ -35,7 +35,7 @@ const Users = () => {
 
     const role = roles.getKey(newRole);
     const response = await axiosInstance.patch(`users/${userId}`, { role });
-    if (response.error) return;
+    if (hasError(response)) return;
 
     await fetchUsers();
     toast.success('Роль успішно змінена.');
@@ -48,7 +48,7 @@ const Users = () => {
       ...formData,
       role: roles.getKey(formData.role),
     });
-    if (response.error) return;
+    if (hasError(response)) return;
 
     await fetchUsers();
     setIsModalOpen(false);
