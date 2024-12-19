@@ -22,8 +22,11 @@ function App() {
           <Route path="/services" element={<Services />} />
           <Route path="/auth" element={<Auth isSignup={isSignup} setIsSignup={setIsSignup} />} />
           <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
-          <Route path="/assigned-orders" element={<PrivateRoute><OrderHistory role={'WORKER'} header={'Призначені замовлення'}/></PrivateRoute>} />
-          <Route path="/admin-panel" element={<PrivateRoute><AdminPanel /></PrivateRoute>} />
+          <Route path="/assigned-orders" element={
+            <PrivateRoute role='WORKER'>
+              <OrderHistory role={'WORKER'} header={'Призначені замовлення'}/>
+            </PrivateRoute>} />
+          <Route path="/admin-panel" element={<PrivateRoute role='ADMIN'><AdminPanel /></PrivateRoute>} />
         </Routes>
       </Router>
     </UserProvider>
