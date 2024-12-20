@@ -42,7 +42,7 @@ export class CreateServiceDTO extends IsActiveDTO {
 
   @IsOptional()
   @IsUrl()
-    imageUrl: string;
+    imageUrl?: string;
 }
 
 export class UpdateServiceDTO extends PartialType(CreateServiceDTO) {}
