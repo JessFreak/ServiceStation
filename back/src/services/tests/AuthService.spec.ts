@@ -5,13 +5,13 @@ import { AlreadyRegisteredException } from '../../utils/exceptions/AlreadyRegist
 import { NotRegisteredException } from '../../utils/exceptions/NotRegisteredException';
 import { InvalidPasswordException } from '../../utils/exceptions/InvalidPasswordException';
 import { Test } from '@nestjs/testing';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { PasswordRepeatException } from '../../utils/exceptions/PasswordRepeatException';
 import config from '../../config/config';
 
 jest.mock('../../database/repositories/UserRepository');
 jest.mock('@nestjs/jwt');
-jest.mock('bcrypt', () => ({
+jest.mock('bcryptjs', () => ({
   hash: jest.fn(),
   compare: jest.fn(),
 }));

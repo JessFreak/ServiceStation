@@ -26,7 +26,7 @@ export class UserService {
   }
 
   async updateRole (adminId: string, id: string, role: Role): Promise<User> {
-    if (adminId === id) throw new ForbiddenException('You cannot change your own role.');
+    if (adminId === id) throw new ForbiddenException('Ви не можете змінити свою роль');
 
     return this.userRepository.updateById(id, { role });
   }

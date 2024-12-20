@@ -2,7 +2,7 @@ import {
   Inject,
   Injectable,
 } from '@nestjs/common';
-import { compare, hash } from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { UserRepository } from '../database/repositories/UserRepository';
 import { LoginDTO, RegisterDTO } from '../utils/dtos/AuthDTO';
@@ -29,7 +29,7 @@ export class AuthService {
   async register (user: RegisterDTO): Promise<User> {
     await this.checkIfEmailOrPhoneExist(user);
 
-    const hashedPassword = await hash(user.password, 10);
+    const hashedPassword = await bcrypt.hash(user.password, 10);
 
     return this.userRepository.create({
       ...user,
@@ -38,7 +38,7 @@ export class AuthService {
   }
 
   private async validatePassword (password: string, userPassword: string): Promise<void> {
-    const isPasswordsMatch = await compare(password, userPassword);
+    const isPasswordsMatch = await bcrypt.compare(password, userPassword);
     if (!isPasswordsMatch) throw new InvalidPasswordException();
   }
 
@@ -91,7 +91,7 @@ export class AuthService {
       throw new PasswordRepeatException();
     }
 
-    const hashedPassword = await hash(newPassword, 10);
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
     await this.userRepository.updateById(userId, { password: hashedPassword });
   }
 
