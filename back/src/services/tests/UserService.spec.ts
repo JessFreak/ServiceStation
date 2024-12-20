@@ -33,6 +33,9 @@ describe('UserService', () => {
     year: 2020,
   };
 
+  const vehicleData = { vin: '9876543210', type: 'CAR' as Type, model: 'Civic', year: 2021 };
+  const updateVehicleData = { vin: '9876543210', make: 'Honda', model: 'Civic', year: 2021 };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -101,7 +104,6 @@ describe('UserService', () => {
 
   describe('addVehicle', () => {
     it('should add a vehicle for the user', async () => {
-      const vehicleData = { vin: '9876543210', type: 'CAR' as Type, model: 'Civic', year: 2021 };
       const result = await userService.addVehicle('1', vehicleData);
 
       expect(result).toEqual(mockVehicle);
@@ -111,36 +113,29 @@ describe('UserService', () => {
     it('should throw AlreadyRegisteredException if the VIN already exists', async () => {
       jest.spyOn(vehicleRepository, 'find').mockResolvedValue(mockVehicle);
 
-      const vehicleData = { vin: '1234567890', type: 'CAR' as Type, model: 'Civic', year: 2021 };
-
       await expect(userService.addVehicle('1', vehicleData)).rejects.toThrow(AlreadyRegisteredException);
     });
   });
 
   describe('updateVehicle', () => {
     it('should update the vehicle details', async () => {
-      const updateData = { vin: '9876543210', make: 'Honda', model: 'Civic', year: 2021 };
-      const result = await userService.updateVehicle('1', '1', updateData);
+      const result = await userService.updateVehicle('1', '1', updateVehicleData);
 
       expect(result).toEqual(mockVehicle);
-      expect(vehicleRepository.updateById).toHaveBeenCalledWith('1', updateData);
+      expect(vehicleRepository.updateById).toHaveBeenCalledWith('1', updateVehicleData);
     });
 
     it('should throw NotBelongException if the user does not own the vehicle', async () => {
       jest.spyOn(vehicleRepository, 'findById').mockResolvedValue({ ...mockVehicle, userId: '2' });
 
-      const updateData = { vin: '9876543210', make: 'Honda', model: 'Civic', year: 2021 };
-
-      await expect(userService.updateVehicle('1', '1', updateData)).rejects.toThrow(NotBelongException);
+      await expect(userService.updateVehicle('1', '1', updateVehicleData)).rejects.toThrow(NotBelongException);
     });
 
     it('should throw AlreadyRegisteredException if VIN already exists for another vehicle', async () => {
       const anotherVehicle = { ...mockVehicle, id: '2' };
       jest.spyOn(vehicleRepository, 'find').mockResolvedValue(anotherVehicle);
 
-      const updateData = { vin: '1234567890', make: 'Honda', model: 'Civic', year: 2021 };
-
-      await expect(userService.updateVehicle('1', '1', updateData)).rejects.toThrow(AlreadyRegisteredException);
+      await expect(userService.updateVehicle('1', '1', updateVehicleData)).rejects.toThrow(AlreadyRegisteredException);
     });
   });
 

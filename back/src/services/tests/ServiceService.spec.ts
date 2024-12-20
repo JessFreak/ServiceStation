@@ -15,6 +15,35 @@ describe('ServiceService', () => {
     deleteById: jest.fn(),
   };
 
+  const createServiceDTO = {
+    name: 'Test Service',
+    price: 100,
+    isActive: true,
+    description: 'Test description',
+    imageUrl: 'https://example.com/image.jpg',
+  };
+
+  const mockService: Service = {
+    id: '1',
+    ...createServiceDTO,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+
+  const serviceQueryDTO: ServiceQueryDTO = {
+    isActive: true,
+    name: 'Test',
+    minPrice: 50,
+    maxPrice: 150,
+  };
+
+  const mockServices: Service[] = [mockService];
+
+  const updateServiceDTO: UpdateServiceDTO = {
+    name: 'Updated Service',
+    price: 120,
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -33,15 +62,6 @@ describe('ServiceService', () => {
 
   describe('create', () => {
     it('should create a service', async () => {
-      const createServiceDTO = {
-        name: 'Test Service',
-        price: 100,
-        isActive: true,
-        description: 'Test description',
-        imageUrl: 'https://example.com/image.jpg',
-      };
-      const mockService: Service = { id: '1', ...createServiceDTO, createdAt: new Date(), updatedAt: new Date() };
-
       mockServiceRepository.create.mockResolvedValue(mockService);
 
       const result = await serviceService.create(createServiceDTO);
@@ -53,20 +73,6 @@ describe('ServiceService', () => {
 
   describe('getAll', () => {
     it('should return a list of services', async () => {
-      const serviceQueryDTO: ServiceQueryDTO = { isActive: true, name: 'Test', minPrice: 50, maxPrice: 150 };
-      const mockServices: Service[] = [
-        {
-          id: '1',
-          name: 'Test Service',
-          price: 100,
-          isActive: true,
-          description: 'Test description',
-          imageUrl: 'https://example.com/image.jpg',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      ];
-
       mockServiceRepository.findMany.mockResolvedValue(mockServices);
 
       const result = await serviceService.getAll(serviceQueryDTO);
@@ -80,17 +86,14 @@ describe('ServiceService', () => {
     });
 
     it('should return an empty list if maxPrice is less than minPrice', async () => {
-      const serviceQueryDTO: ServiceQueryDTO = { isActive: true, name: 'Test', minPrice: 150, maxPrice: 50 };
-      const result = await serviceService.getAll(serviceQueryDTO);
+      const invalidServiceQueryDTO: ServiceQueryDTO = { isActive: true, name: 'Test', minPrice: 150, maxPrice: 50 };
+      const result = await serviceService.getAll(invalidServiceQueryDTO);
       expect(result).toEqual([]);
     });
   });
 
   describe('updateById', () => {
     it('should update a service', async () => {
-      const updateServiceDTO: UpdateServiceDTO = { name: 'Updated Service', price: 120 };
-      const mockService: Service = { id: '1', name: 'Test Service', price: 100, isActive: true, description: 'Test description', imageUrl: 'https://example.com/image.jpg', createdAt: new Date(), updatedAt: new Date() };
-
       mockServiceRepository.updateById.mockResolvedValue(mockService);
 
       const result = await serviceService.updateById('1', updateServiceDTO);
@@ -102,8 +105,6 @@ describe('ServiceService', () => {
 
   describe('deleteById', () => {
     it('should delete a service', async () => {
-      const mockService: Service = { id: '1', name: 'Test Service', price: 100, isActive: true, description: 'Test description', imageUrl: 'https://example.com/image.jpg', createdAt: new Date(), updatedAt: new Date() };
-
       mockServiceRepository.deleteById.mockResolvedValue(mockService);
 
       const result = await serviceService.deleteById('1');

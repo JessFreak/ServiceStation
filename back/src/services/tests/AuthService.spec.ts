@@ -19,6 +19,10 @@ describe('AuthService', () => {
   let authService: AuthService;
   let userRepository: UserRepository;
 
+  const userDto = { email: 'test@example.com', phone: '1234567890', password: 'password', name: 'John', surname: 'Doe' };
+  const loginDto = { email: 'test@example.com', password: 'password' };
+  const updatePasswordDto = { oldPassword: 'password', newPassword: 'newPassword' };
+
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
       providers: [
@@ -35,7 +39,6 @@ describe('AuthService', () => {
   describe('register', () => {
     it('should throw AlreadyRegisteredException if email or phone exists', async () => {
       jest.spyOn(userRepository, 'findByEmail').mockResolvedValueOnce({ id: '1', email: 'test@example.com' } as any);
-      const userDto = { email: 'test@example.com', phone: '1234567890', password: 'password', name: 'John', surname: 'Doe' };
 
       await expect(authService.register(userDto)).rejects.toThrow(AlreadyRegisteredException);
     });
@@ -43,9 +46,8 @@ describe('AuthService', () => {
     it('should create a new user with hashed password', async () => {
       jest.spyOn(userRepository, 'findByEmail').mockResolvedValueOnce(null);
       jest.spyOn(userRepository, 'create').mockResolvedValueOnce({ id: '1', email: 'test@example.com' } as any);
-      (bcrypt.hash as jest.Mock).mockResolvedValue('hashedPassword'); // Mock bcrypt.hash
+      (bcrypt.hash as jest.Mock).mockResolvedValue('hashedPassword');
 
-      const userDto = { email: 'test@example.com', phone: '1234567890', password: 'password', name: 'John', surname: 'Doe' };
       const result = await authService.register(userDto);
 
       expect(result).toHaveProperty('id');
@@ -57,23 +59,20 @@ describe('AuthService', () => {
   describe('login', () => {
     it('should throw NotRegisteredException if user is not found', async () => {
       jest.spyOn(userRepository, 'findByEmail').mockResolvedValueOnce(null);
-      const loginDto = { email: 'test@example.com', password: 'password' };
 
       await expect(authService.login(loginDto)).rejects.toThrow(NotRegisteredException);
     });
 
     it('should throw InvalidPasswordException if password is incorrect', async () => {
       jest.spyOn(userRepository, 'findByEmail').mockResolvedValueOnce({ id: '1', email: 'test@example.com', password: 'hashedPassword' } as any);
-      (bcrypt.compare as jest.Mock).mockResolvedValue(false); // Mock bcrypt.compare
-      const loginDto = { email: 'test@example.com', password: 'wrongPassword' };
+      (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
       await expect(authService.login(loginDto)).rejects.toThrow(InvalidPasswordException);
     });
 
     it('should return user id on successful login', async () => {
       jest.spyOn(userRepository, 'findByEmail').mockResolvedValueOnce({ id: '1', email: 'test@example.com', password: 'hashedPassword' } as any);
-      (bcrypt.compare as jest.Mock).mockResolvedValue(true); // Mock bcrypt.compare
-      const loginDto = { email: 'test@example.com', password: 'password' };
+      (bcrypt.compare as jest.Mock).mockResolvedValue(true);
 
       const result = await authService.login(loginDto);
       expect(result).toHaveProperty('id');
@@ -89,13 +88,9 @@ describe('AuthService', () => {
     });
 
     it('should update password successfully', async () => {
-      const updatePasswordDto = { oldPassword: 'oldPassword', newPassword: 'newPassword' };
-
       jest.spyOn(userRepository, 'findById').mockResolvedValueOnce({ id: '1', password: 'hashedOldPassword' } as any);
-
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
       (bcrypt.hash as jest.Mock).mockResolvedValue('hashedNewPassword');
-
       jest.spyOn(userRepository, 'updateById').mockResolvedValueOnce({ id: '1', password: 'hashedNewPassword' } as any);
 
       await authService.updatePassword('1', updatePasswordDto);
@@ -103,7 +98,6 @@ describe('AuthService', () => {
       expect(userRepository.updateById).toHaveBeenCalledWith('1', { password: 'hashedNewPassword' });
     });
   });
-
 
   describe('checkIfEmailOrPhoneExist', () => {
     it('should throw AlreadyRegisteredException if email exists', async () => {
