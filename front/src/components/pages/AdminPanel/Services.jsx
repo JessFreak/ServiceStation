@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { axiosInstance, getDateString, hasError } from '@/utils';
 import MyModal from '@UI/MyModal';
 import ServiceForm from '@Components/pages/AdminPanel/ServiceForm';
@@ -9,14 +9,13 @@ import ServicesFilters from '@Components/pages/Services/ServicesFilters';
 const Services = () => {
   const [services, setServices] = useState([]);
   const [filters, setFilters] = useState({ name: '', minPrice: null, maxPrice: null });
-  const [debounceTimer, setDebounceTimer] = useState(null);
 
   const [loading, setLoading] = useState(true);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
 
-  const fetchServices = async () => {
+  const fetchServices = useCallback(async () => {
     setLoading(true);
     const response = await axiosInstance.get('services', {
       params: filters,
@@ -25,17 +24,16 @@ const Services = () => {
 
     setServices(response.data);
     setLoading(false);
-  };
+  }, [filters]);
 
   useEffect(() => {
-    if (debounceTimer) clearTimeout(debounceTimer);
 
     const timer = setTimeout(() => {
       fetchServices().then();
     }, 500);
 
-    setDebounceTimer(timer);
-  }, [filters]);
+    return () => clearTimeout(timer);
+  }, [fetchServices]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

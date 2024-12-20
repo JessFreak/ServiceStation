@@ -14,7 +14,8 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "craco build"
+    "build": "craco build",
+    "lint:check": "eslint \"src/**/*.{js,jsx}\""
   },
   "eslintConfig": {
     "extends": [
@@ -35,6 +36,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "webpack-dev-server": "^5.2.0"
   }
 }

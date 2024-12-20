@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import './Services.css';
 import {
   axiosInstance,
@@ -29,42 +29,38 @@ export const Services = () => {
   const [totalPrice, setTotalPrice] = useState(0);
 
   const [filters, setFilters] = useState({ name: '', minPrice: null, maxPrice: null });
-  const [debounceTimer, setDebounceTimer] = useState(null);
 
   const { user } = useUser();
 
-  const fetchVehicles = async () => {
+  const fetchVehicles = useCallback(async () => {
     if (user) {
       setLoading(true);
       const response = await axiosInstance.get('users/vehicles');
       setVehicles(response.data);
       setLoading(false);
     }
-  }
+  }, [user]);
 
   useEffect(() => {
     fetchVehicles().then();
-  }, [user]);
+  }, [fetchVehicles]);
 
-  const fetchServices = async () => {
+  const fetchServices = useCallback(async () => {
     setLoading(true);
     const response = await axiosInstance.get('services', {
       params: filters,
     });
     setServices(response.data);
-
     setLoading(false);
-  };
+  }, [filters]);
 
   useEffect(() => {
-    if (debounceTimer) clearTimeout(debounceTimer);
-
     const timer = setTimeout(() => {
       fetchServices().then();
     }, 500);
 
-    setDebounceTimer(timer);
-  }, [filters]);
+    return () => clearTimeout(timer);
+  }, [fetchServices]);
 
   useEffect(() => {
     if (selectedServices.length > 0) {

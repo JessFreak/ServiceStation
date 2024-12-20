@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { axiosInstance, hasError, roles } from '@/utils';
 import Dropdown from '@UI/Dropdown/Dropdown';
 import { toast } from 'react-toastify';
@@ -15,7 +15,7 @@ const Users = () => {
   const initData = { name: '', surname: '', email: '', phone: '', password: '', role: null }
   const [formData, setFormData] = useState(initData);
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     setLoading(true);
     const response = await axiosInstance.get('users', {
       params: { role: roles.getKey(activeRole) },
@@ -24,11 +24,11 @@ const Users = () => {
 
     setUsers(response.data);
     setLoading(false);
-  };
+  }, [activeRole]);
 
   useEffect(() => {
     fetchUsers().then();
-  }, [activeRole]);
+  }, [fetchUsers]);
 
   const handleRoleChange = async (userId, newRole) => {
     if (!newRole) return;
