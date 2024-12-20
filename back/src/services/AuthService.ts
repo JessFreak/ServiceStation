@@ -1,4 +1,5 @@
 import {
+  Inject,
   Injectable,
 } from '@nestjs/common';
 import { compare, hash } from 'bcrypt';
@@ -14,10 +15,13 @@ import { UpdatePasswordDto } from '../utils/dtos/ChangePasswordDTO';
 import { User } from '@prisma/client';
 import { UpdateUserDTO } from '../utils/dtos/UserDTO';
 import { InvalidPasswordException } from '../utils/exceptions/InvalidPasswordException';
+import config from '../config/config';
+import { ConfigType } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor (
+    @Inject(config.KEY) private configService: ConfigType<typeof config>,
     private jwtService: JwtService,
     private readonly userRepository: UserRepository,
   ) {}
@@ -64,7 +68,7 @@ export class AuthService {
     });
 
     res.cookie('access_token', token);
-    res.redirect('http://localhost:3000/');
+    res.redirect(this.configService.clientUrl);
   }
 
   logout (res: Response): Response {

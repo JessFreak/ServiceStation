@@ -7,6 +7,7 @@ import { InvalidPasswordException } from '../../utils/exceptions/InvalidPassword
 import { Test } from '@nestjs/testing';
 import * as bcrypt from 'bcrypt';
 import { PasswordRepeatException } from '../../utils/exceptions/PasswordRepeatException';
+import config from '../../config/config';
 
 jest.mock('../../database/repositories/UserRepository');
 jest.mock('@nestjs/jwt');
@@ -22,6 +23,9 @@ describe('AuthService', () => {
   const userDto = { email: 'test@example.com', phone: '1234567890', password: 'password', name: 'John', surname: 'Doe' };
   const loginDto = { email: 'test@example.com', password: 'password' };
   const updatePasswordDto = { oldPassword: 'password', newPassword: 'newPassword' };
+  const mockConfigService = {
+    clientUrl: 'http://localhost:3000',
+  };
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -29,6 +33,7 @@ describe('AuthService', () => {
         AuthService,
         { provide: UserRepository, useClass: UserRepository },
         { provide: JwtService, useClass: JwtService },
+        { provide: config.KEY, useValue: mockConfigService },
       ],
     }).compile();
 

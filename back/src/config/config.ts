@@ -11,4 +11,5 @@ export default registerAs('config', () => ({
   signOptions: {
     expiresIn: process.env.JWT_EXPIRE,
   },
+  clientUrl: process.env.CLIENT_URL,
 }));
