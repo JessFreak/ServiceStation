@@ -16,7 +16,7 @@ export class UserService {
     private readonly authService: AuthService,
   ) {}
 
-  getAllUsers({ role }: RoleDTO): Promise<User[]> {
+  getAllUsers ({ role }: RoleDTO): Promise<User[]> {
     return this.userRepository.findMany({ where: { role } });
   }
 

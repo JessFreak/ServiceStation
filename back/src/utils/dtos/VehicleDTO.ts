@@ -5,19 +5,19 @@ import { Type } from '@prisma/client';
 export class CreateVehicleDTO {
   @IsNotEmpty()
   @IsString()
-  model: string;
+    model: string;
 
   @IsNotEmpty()
   @IsNumber()
-  year: number;
+    year: number;
 
   @IsNotEmpty()
   @IsString()
-  vin: string;
+    vin: string;
 
   @IsNotEmpty()
   @IsEnum(Type)
-  type: Type;
+    type: Type;
 }
 
 export class UpdateVehicleDTO extends PartialType(CreateVehicleDTO) {}

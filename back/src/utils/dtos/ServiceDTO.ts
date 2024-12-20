@@ -6,43 +6,43 @@ export class IsActiveDTO {
   @IsOptional()
   @IsBoolean()
   @ToBoolean()
-  isActive?: boolean;
+    isActive?: boolean;
 }
 
 export class ServiceQueryDTO extends IsActiveDTO {
   @IsOptional()
   @IsString()
-  name?: string;
+    name?: string;
 
   @IsOptional()
   @IsNumber()
   @Min(0)
-  minPrice?: number;
+    minPrice?: number;
 
   @IsOptional()
   @IsNumber()
   @Min(0)
-  maxPrice?: number;
+    maxPrice?: number;
 }
 
 export class CreateServiceDTO extends IsActiveDTO {
   @IsNotEmpty()
   @IsString()
-  name: string;
+    name: string;
 
   @IsString()
   @IsOptional()
   @MaxLength(500)
-  description?: string;
+    description?: string;
 
   @IsNotEmpty()
   @IsNumber()
   @Min(0)
-  price: number;
+    price: number;
 
   @IsOptional()
   @IsUrl()
-  imageUrl: string
+    imageUrl: string;
 }
 
 export class UpdateServiceDTO extends PartialType(CreateServiceDTO) {}

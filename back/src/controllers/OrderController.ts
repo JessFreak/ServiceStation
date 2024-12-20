@@ -30,7 +30,7 @@ export class OrderController {
     @Query('serviceId', ServiceByIdPipe) serviceId: string,
     @Query('userId', UserByIdPipe) userId: string,
   ): Promise<OrderResponse[]> {
-    const orders = await this.orderService.getAll(query);
+    const orders = await this.orderService.getAll({ ...query, serviceId, userId });
     return OrderMapper.getOrdersResponse(orders);
   }
 
@@ -48,7 +48,7 @@ export class OrderController {
     @Body() body: WorkerDTO,
     @Body('workerId', UserByIdPipe) workerId: string,
   ): Promise<OrderResponse> {
-    const order = await this.orderService.updateWorker(orderId, body.workerId);
+    const order = await this.orderService.updateWorker(orderId, body.workerId || workerId);
     return OrderMapper.getOrderResponse(order);
   }
 

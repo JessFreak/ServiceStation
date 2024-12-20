@@ -4,23 +4,23 @@ export class LoginDTO {
   @IsEmail({})
   @IsNotEmpty()
   @IsString()
-  email: string;
+    email: string;
 
   @IsNotEmpty()
   @IsString()
-  password: string;
+    password: string;
 }
 
 export class RegisterDTO extends LoginDTO {
   @IsNotEmpty()
   @IsString()
-  name: string;
+    name: string;
 
   @IsNotEmpty()
   @IsString()
-  surname: string;
+    surname: string;
 
   @IsOptional()
   @IsPhoneNumber('UA')
-  phone?: string;
+    phone?: string;
 }

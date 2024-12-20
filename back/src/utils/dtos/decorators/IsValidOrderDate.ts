@@ -8,8 +8,8 @@ interface IsValidOrderDateOptions {
   difference: number;
 }
 
-export function IsValidOrderDate(options?: IsValidOrderDateOptions, validationOptions?: ValidationOptions) {
-  return function (object: Object, propertyName: string): void {
+export function IsValidOrderDate (options?: IsValidOrderDateOptions, validationOptions?: ValidationOptions) {
+  return function (object: object, propertyName: string): void {
     const { timeZone = 'Europe/Kiev', startHour = 8, endHour = 20, difference } = options || {};
 
     registerDecorator({
@@ -18,7 +18,7 @@ export function IsValidOrderDate(options?: IsValidOrderDateOptions, validationOp
       propertyName: propertyName,
       options: validationOptions,
       validator: {
-        validate(value: any): boolean {
+        validate (value: any): boolean {
           const orderDate = DateTime.fromISO(value, { zone: timeZone });
 
           if (!orderDate.isValid) {
@@ -34,7 +34,7 @@ export function IsValidOrderDate(options?: IsValidOrderDateOptions, validationOp
           const minDate = DateTime.local().plus({ hours: difference });
           return orderDate > minDate;
         },
-        defaultMessage(args): string {
+        defaultMessage (args): string {
           const orderDate = DateTime.fromISO(args.value, { zone: 'Europe/Kiev' });
           const start = orderDate.set({ hour: 8, minute: 0, second: 0 });
           const end = orderDate.set({ hour: 20, minute: 0, second: 0 });
@@ -49,7 +49,7 @@ export function IsValidOrderDate(options?: IsValidOrderDateOptions, validationOp
           }
 
           return '';
-        }
+        },
       },
     });
   };

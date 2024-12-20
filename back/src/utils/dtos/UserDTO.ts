@@ -6,7 +6,7 @@ import { Role } from '@prisma/client';
 export class RoleDTO {
   @IsOptional()
   @IsEnum(Role)
-  role: Role;
+    role: Role;
 }
 
 export class CreateUserDTO extends IntersectionType(RegisterDTO, RoleDTO) {}
@@ -14,21 +14,21 @@ export class CreateUserDTO extends IntersectionType(RegisterDTO, RoleDTO) {}
 export class UpdateUserDTO {
   @IsOptional()
   @IsString()
-  name?: string;
+    name?: string;
 
   @IsOptional()
   @IsString()
-  surname?: string;
+    surname?: string;
 
   @IsOptional()
   @IsEmail()
-  email?: string;
+    email?: string;
 
   @IsOptional()
   @IsPhoneNumber('UA')
-  phone?: string;
+    phone?: string;
 
   @IsOptional()
   @IsUrl()
-  avatarUrl?: string;
+    avatarUrl?: string;
 }

@@ -13,7 +13,7 @@ export class CreateOrderPipe implements PipeTransform<CreateOrderDTO, Promise<Cr
   async transform (value: CreateOrderDTO): Promise<CreateOrderDTO> {
     await Promise.all([
       this.vehicleByIdPipe.transform(value.vehicleId),
-      ...value.services.map(serviceId => this.serviceByIdPipe.transform(serviceId)),
+      ...value.services.map((serviceId) => this.serviceByIdPipe.transform(serviceId)),
     ]);
 
     return value;

@@ -11,7 +11,7 @@ export class ServiceService {
     return this.serviceRepository.create(data);
   }
 
-  async getAll({ isActive, name, minPrice, maxPrice }: ServiceQueryDTO): Promise<Service[]> {
+  async getAll ({ isActive, name, minPrice, maxPrice }: ServiceQueryDTO): Promise<Service[]> {
     if (maxPrice < minPrice) return [];
 
     return this.serviceRepository.findMany({

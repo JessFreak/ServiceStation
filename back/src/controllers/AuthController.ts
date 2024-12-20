@@ -60,7 +60,7 @@ export class AuthController {
 
   @Access()
   @Delete('me')
-  deleteMe(@UserRequest() user: User, @Res() res: Response): Promise<Response> {
+  deleteMe (@UserRequest() user: User, @Res() res: Response): Promise<Response> {
     return this.authService.deleteMe(user.id, res);
   }
 

@@ -75,7 +75,7 @@ export class OrderService {
       services: {
         some: {
           serviceId,
-        }
+        },
       },
       orderDate: day ? { gte: day, lte: nextDay } : undefined,
     });

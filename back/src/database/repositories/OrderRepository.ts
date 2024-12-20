@@ -10,13 +10,13 @@ export class OrderRepository {
   private include = {
     services: {
       include: {
-        service: true
+        service: true,
       },
     },
     worker: true,
     vehicle: {
       include: {
-        user: true
+        user: true,
       },
     },
   };

@@ -96,7 +96,7 @@ export class UsersController {
     @Query('vehicleId', VehicleByIdPipe) vehicleId: string,
     @Query('serviceId', ServiceByIdPipe) serviceId: string,
   ): Promise<OrderResponse[]> {
-    const orders = await this.orderService.getAll({ ...query, userId: user.id });
+    const orders = await this.orderService.getAll({ ...query, userId: user.id, vehicleId, serviceId });
     return OrderMapper.getOrdersResponse(orders);
   }
 

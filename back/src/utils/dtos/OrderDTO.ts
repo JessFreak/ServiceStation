@@ -12,44 +12,44 @@ export class CreateOrderDTO {
     endHour: 20,
     difference: 4,
   })
-  orderDate: string;
+    orderDate: string;
 
   @IsNotEmpty()
   @IsUUID()
-  vehicleId: string;
+    vehicleId: string;
 
   @IsNotEmpty()
   @IsArray()
   @IsUUID('all', { each: true })
-  services: string[];
+    services: string[];
 }
 
 export class WorkerDTO {
   @IsNotEmpty()
   @IsUUID()
-  workerId: string;
+    workerId: string;
 }
 
 export class StatusDTO {
   @IsNotEmpty()
   @IsEnum(Status)
-  status: Status;
+    status: Status;
 }
 
 export class OrderQueryDTO extends PartialType(IntersectionType(WorkerDTO, StatusDTO)) {
   @IsOptional()
   @IsUUID()
-  userId?: string;
+    userId?: string;
 
   @IsOptional()
   @IsUUID()
-  serviceId?: string;
+    serviceId?: string;
 
   @IsOptional()
   @IsUUID()
-  vehicleId?: string;
+    vehicleId?: string;
 
   @IsOptional()
   @IsDateString()
-  orderDay?: string;
+    orderDay?: string;
 }

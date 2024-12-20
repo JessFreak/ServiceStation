@@ -5,14 +5,14 @@ import { UserRepository } from '../../../database/repositories/UserRepository';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
-  constructor(
+  constructor (
     private readonly jwtService: JwtService,
     private readonly userRepository: UserRepository,
   ) {
     super();
   }
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
+  async canActivate (context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = request.cookies['access_token'];
 

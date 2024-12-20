@@ -58,7 +58,7 @@ export class AuthService {
     return this.userRepository.create(googleUser);
   }
 
-  setToken(userId: string, res: Response) {
+  setToken (userId: string, res: Response) {
     const token = this.jwtService.sign({
       sub: userId,
     });
@@ -67,31 +67,31 @@ export class AuthService {
     res.redirect('http://localhost:3000/');
   }
 
-  logout(res: Response): Response {
+  logout (res: Response): Response {
     res.clearCookie('access_token');
     return res.status(200).json();
   }
 
-  async deleteMe(userId: string, res: Response): Promise<Response> {
+  async deleteMe (userId: string, res: Response): Promise<Response> {
     await this.userRepository.deleteById(userId);
     return this.logout(res);
   }
 
-  async updatePassword(userId: string, { oldPassword, newPassword }: UpdatePasswordDto): Promise<void> {
+  async updatePassword (userId: string, { oldPassword, newPassword }: UpdatePasswordDto): Promise<void> {
     const user = await this.userRepository.findById(userId);
-    if (!!user.password) {
+    if (user.password) {
       await this.validatePassword(oldPassword, user.password);
     }
 
     if (oldPassword === newPassword) {
-      throw new PasswordRepeatException;
+      throw new PasswordRepeatException();
     }
 
     const hashedPassword = await hash(newPassword, 10);
     await this.userRepository.updateById(userId, { password: hashedPassword });
   }
 
-  async checkIfEmailOrPhoneExist({ email, phone }: UpdateUserDTO, userId?: string ): Promise<void> {
+  async checkIfEmailOrPhoneExist ({ email, phone }: UpdateUserDTO, userId?: string): Promise<void> {
     const emailExist = await this.userRepository.findByEmail(email);
     if (emailExist && emailExist.id !== userId) {
       throw new AlreadyRegisteredException('User', 'email');
