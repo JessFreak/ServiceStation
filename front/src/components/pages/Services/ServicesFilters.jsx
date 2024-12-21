@@ -3,7 +3,7 @@ import React from 'react';
 const ServicesFilters = ({ filters, onFilterChange }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    onFilterChange((prevFilters) => ({ ...prevFilters, [name]: value }));
+    onFilterChange((prevFilters) => ({ ...prevFilters, [name]: value || null }));
   };
 
   return (

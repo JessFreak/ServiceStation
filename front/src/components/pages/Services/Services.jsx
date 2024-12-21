@@ -131,24 +131,26 @@ export const Services = () => {
       <h1 className="services__title">Обери свою послугу</h1>
       <ServicesFilters filters={filters} onFilterChange={setFilters} />
       <div className="services__grid">
-        {services.map((service, index) => (
-          <div className="service-card" key={index}>
-            <div className="service-card__content">
-              <h2>{service.name}</h2>
-              <p>{service.description}</p>
-              <p className="service-card__price">від {service.price} грн</p>
-              <button
-                className="service-button service-card__button"
-                onClick={() => openModal(service)}
-              >
-                Замовити
-              </button>
+        {services.length > 0 ? (
+          services.map((service, index) => (
+            <div className="service-card" key={index}>
+              <div className="service-card__content">
+                <h2>{service.name}</h2>
+                <p>{service.description}</p>
+                <p className="service-card__price">від {service.price} грн</p>
+                <button
+                  className="service-button service-card__button"
+                  onClick={() => openModal(service)}
+                >
+                  Замовити
+                </button>
+              </div>
+              <div className="service-card__image">
+                <img src={service.imageUrl || `${process.env.PUBLIC_URL}/wrench.svg`} alt={service.name} />
+              </div>
             </div>
-            <div className="service-card__image">
-              <img src={service.imageUrl || `${process.env.PUBLIC_URL}/wrench.svg`} alt={service.name} />
-            </div>
-          </div>
-        ))}
+          ))
+        ) : <h1>Послуги за цими фільтрами відсутні.</h1>}
       </div>
 
       {selectedServices && (
