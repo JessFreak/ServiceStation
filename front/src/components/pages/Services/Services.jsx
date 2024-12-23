@@ -48,7 +48,10 @@ export const Services = () => {
   const fetchServices = useCallback(async () => {
     setLoading(true);
     const response = await axiosInstance.get('services', {
-      params: filters,
+      params: {
+        ...filters,
+        isActive: true,
+      }
     });
     setServices(response.data);
     setLoading(false);
