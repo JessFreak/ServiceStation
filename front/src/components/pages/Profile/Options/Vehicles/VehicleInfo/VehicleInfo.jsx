@@ -56,7 +56,10 @@ function VehicleInfo({ initial, onVehicleUpdate, setNewVehicle }) {
 
     toast.success('Транспорт видалено успішно.');
     onVehicleUpdate(null);
-    setNewVehicle(false);
+
+    if (setNewVehicle) {
+      setNewVehicle(null);
+    }
   };
 
   return (
