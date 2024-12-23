@@ -108,7 +108,7 @@ function VehicleInfo({ initial, onVehicleUpdate, setNewVehicle }) {
           placeholder="VIN"
           value={carData.vin}
           onChange={handleChange}
-          maxLength={17}
+          pattern="^[A-HJ-NPR-Z0-9]{17}$"
           required
         />
       </div>
