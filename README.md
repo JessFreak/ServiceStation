@@ -27,7 +27,7 @@
 For a detailed overview of the system's structure and components, please refer to the `diagrams/` folder.
 
 ## 📄 Additional document
-Also you can check explanatory note to course work (Ukrainian).
+Also you can check explanatory note to course work (Ukrainian): Курсова робота.pdf.
 
 ## 🚀 Running the Project Locally
 
