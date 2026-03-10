@@ -1,0 +1,13 @@
+{
+  "name": "service-station-root",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "back",
+    "front"
+  ],
+  "scripts": {
+    "install-all": "npm install",
+    "test": "npm test -w back"
+  }
+}

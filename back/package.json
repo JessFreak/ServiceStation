@@ -1,6 +1,6 @@
 {
   "name": "back",
-  "version": "0.0.1",
+  "version": "1.0",
   "description": "",
   "author": "",
   "private": true,
@@ -11,7 +11,8 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "yarn db push && yarn nest start",
+    "start:prod": "npx prisma migrate deploy && npm run start",
+    "db:migrate": "npx prisma migrate dev",
     "db:sync": "prisma db push",
     "lint": "eslint \"src/**/*.ts\" --fix",
     "lint:check": "eslint \"src/**/*.ts\"",
@@ -20,7 +21,6 @@
     "test:cov": "jest --coverage"
   },
   "dependencies": {
-    "-": "^0.0.1",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.3.0",
     "@nestjs/core": "^10.0.0",
@@ -28,7 +28,8 @@
     "class-transformer": "^0.5.1",
     "cookie-parser": "^1.4.7",
     "reflect-metadata": "^0.2.0",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "@prisma/client": "^6.0.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
@@ -37,7 +38,6 @@
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/swagger": "^8.1.0",
     "@nestjs/testing": "^10.0.0",
-    "@prisma/client": "^6.0.1",
     "@types/bcryptjs": "^2.4.6",
     "@types/cookie-parser": "^1.4.8",
     "@types/express": "^5.0.0",

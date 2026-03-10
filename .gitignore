@@ -1,2 +1,14 @@
 /.idea
 db_data/*
+node_modules/
+back/node_modules/
+front/node_modules/
+
+*.log
+/dist
+back/dist
+front/build
+
+.env
+back/.env
+front/.env
