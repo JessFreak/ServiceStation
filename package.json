@@ -7,7 +7,13 @@
     "front"
   ],
   "scripts": {
-    "install-all": "npm install",
-    "test": "npm test -w back"
+    "test": "npm run generate -w back && npm test -w back"
+  },
+  "devDependencies": {
+    "jest": "^29.5.0",
+    "ts-jest": "^29.1.0",
+    "jest-util": "^29.5.0",
+    "expect": "^29.5.0",
+    "slash": "3.0.0"
   }
 }
