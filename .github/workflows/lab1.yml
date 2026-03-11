@@ -12,6 +12,16 @@ jobs:
       - name: Install Tools
         run: sudo apt-get update && sudo apt-get install -y jq curl
 
+      - name: Create .env file from secrets
+        run: |
+          touch ./back/.env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> ./back/.env
+          echo "JWT_EXPIRE=${{ secrets.JWT_EXPIRE }}" >> ./back/.env
+          echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> ./back/.env
+          echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> ./back/.env
+          echo "GOOGLE_CALLBACK_URL=${{ secrets.GOOGLE_CALLBACK_URL }}" >> ./back/.env
+          echo "CLIENT_URL=${{ secrets.CLIENT_URL }}" >> ./back/.env
+
       - name: Build and Start
         run: docker compose up -d
 
