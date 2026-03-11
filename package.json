@@ -7,13 +7,17 @@
     "front"
   ],
   "scripts": {
+    "build": "npm run build -w back && npm run build -w front",
+    "start:prod": "concurrently \"npm run start:prod -w back\" \"npm run start:prod -w front\"",
+    "start": "concurrently \"npm run start:dev -w back\" \"npm start -w front\"",
     "test": "npm run generate -w back && npm test -w back"
   },
   "devDependencies": {
-    "jest": "^29.5.0",
-    "ts-jest": "^29.1.0",
-    "jest-util": "^29.5.0",
+    "concurrently": "^9.2.1",
     "expect": "^29.5.0",
-    "slash": "3.0.0"
+    "jest": "^29.5.0",
+    "jest-util": "^29.5.0",
+    "slash": "3.0.0",
+    "ts-jest": "^29.1.0"
   }
 }
