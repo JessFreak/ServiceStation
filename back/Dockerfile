@@ -17,10 +17,10 @@ WORKDIR /app
 
 RUN apk update && apk upgrade
 
-COPY package*.json ./
-COPY --from=builder /app/prisma ./prisma
-RUN npm install --omit=dev
+COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/prisma ./prisma
 
 EXPOSE 8080
 
