@@ -16,11 +16,11 @@ FROM node:20-alpine
 WORKDIR /app
 
 RUN apk update && apk upgrade
-COPY package*.json ./
-RUN npm install --omit=dev
 
-COPY --from=builder /app/dist ./dist
+COPY package*.json ./
 COPY --from=builder /app/prisma ./prisma
+RUN npm install --omit=dev
+COPY --from=builder /app/dist ./dist
 
 EXPOSE 8080
 
