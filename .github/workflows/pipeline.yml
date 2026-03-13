@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: Lab 2 Container Registry
 
 on: [push]
 
@@ -36,3 +36,10 @@ jobs:
           push: true
           tags: ${{ id.meta.outputs.tags }}
           labels: ${{ id.meta.outputs.labels }}
+
+      - name: Run Master Validation Script
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          chmod +x ./tests/lab2_test.sh
+          ./tests/lab2_test.sh
