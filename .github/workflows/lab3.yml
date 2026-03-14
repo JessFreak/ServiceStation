@@ -41,6 +41,11 @@ jobs:
           envsubst < k8s/secret.yaml > k8s/secret_ready.yaml
           mv k8s/secret_ready.yaml k8s/secret.yaml
 
+      - name: Pull and Load Postgres image
+        run: |
+          docker pull postgres:15-alpine
+          kind load docker-image postgres:15-alpine --name kind
+
       - name: Apply Kubernetes manifests
         run: |
           kubectl apply -f k8s/
