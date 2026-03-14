@@ -33,17 +33,22 @@ jobs:
           kind load docker-image ghcr.io/${{ env.OWNER_LC }}/${{ env.APP_NAME }}:latest --name kind
           kind load docker-image postgres:15-alpine --name kind
 
-      - name: Prepare Secret
-        env:
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_USER: "postgres"
-          DB_NAME: "service_station"
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+      - name: Prepare All Manifests
         run: |
-          envsubst < k8s/secret.yaml > k8s/secret_ready.yaml
-          mv k8s/secret_ready.yaml k8s/secret.yaml
+          export DB_PASSWORD="${{ secrets.DB_PASSWORD }}"
+          export DB_USER="postgres"
+          export DB_NAME="service_station"
+          export JWT_SECRET="${{ secrets.JWT_SECRET }}"
+          export GOOGLE_CLIENT_ID="${{ secrets.GOOGLE_CLIENT_ID }}"
+          export GOOGLE_CLIENT_SECRET="${{ secrets.GOOGLE_CLIENT_SECRET }}"
+          
+          mkdir -p k8s_ready
+          
+          for file in k8s/*.yaml; do
+            envsubst < "$file" > "k8s_ready/$(basename "$file")"
+          done
+          
+          rm -rf k8s && mv k8s_ready k8s
 
       - name: Apply Kubernetes manifests
         run: kubectl apply -f k8s/
@@ -57,9 +62,11 @@ jobs:
       - name: Debug on Failure
         if: failure()
         run: |
+          echo "=== PODS STATUS ==="
           kubectl get pods
-          kubectl describe pods
+          echo "=== POSTGRES LOGS ==="
           kubectl logs -l app=postgres --tail=50
+          echo "=== BACKEND LOGS ==="
           kubectl logs -l app=ecommerce-app --tail=50
 
       - name: Run Master Validation Script
