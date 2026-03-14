@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: ecommerce-app
-          image: ecommerce-app:latest
+          image: ghcr.io/jessfreak/ecommerce-app:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
