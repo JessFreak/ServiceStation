@@ -45,6 +45,13 @@ jobs:
         run: |
           kubectl apply -f k8s/
 
+      - name: Debug Postgres Status
+        if: always()
+        run: |
+          kubectl get pods
+          kubectl describe pod -l app=postgres
+          kubectl logs -l app=postgres
+
       - name: Wait for Database
         run: |
           kubectl rollout status deployment/postgres-deployment --timeout=60s
