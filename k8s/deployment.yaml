@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend-deployment
+  name: ecommerce-app
   labels:
-    app: backend-deployment
+    app: ecommerce-app
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: backend-deployment
+      app: ecommerce-app
   template:
     metadata:
-      name: backend-deployment
+      name: ecommerce-app
       labels:
-        app: backend-deployment
+        app: ecommerce-app
     spec:
       containers:
-        - name: backend-deployment
+        - name: ecommerce-app
           image: ecommerce-app:latest
           imagePullPolicy: IfNotPresent
           ports:
