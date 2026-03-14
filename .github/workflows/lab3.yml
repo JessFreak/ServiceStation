@@ -23,13 +23,15 @@ jobs:
         with:
           cluster_name: kind
 
-      - name: Build Docker image
+      - name: Build and Pull images
         run: |
           docker build -t ghcr.io/${{ env.OWNER_LC }}/${{ env.APP_NAME }}:latest ./back
+          docker pull postgres:15-alpine
 
-      - name: Load image into KinD
+      - name: Load images into KinD
         run: |
           kind load docker-image ghcr.io/${{ env.OWNER_LC }}/${{ env.APP_NAME }}:latest --name kind
+          kind load docker-image postgres:15-alpine --name kind
 
       - name: Prepare Secret
         env:
@@ -41,29 +43,22 @@ jobs:
           envsubst < k8s/secret.yaml > k8s/secret_ready.yaml
           mv k8s/secret_ready.yaml k8s/secret.yaml
 
-      - name: Pull and Load Postgres image
-        run: |
-          docker pull postgres:15-alpine
-          kind load docker-image postgres:15-alpine --name kind
-
       - name: Apply Kubernetes manifests
-        run: |
-          kubectl apply -f k8s/
-
-      - name: Debug Postgres Status
-        if: always()
-        run: |
-          kubectl get pods
-          kubectl describe pod -l app=postgres
-          kubectl logs -l app=postgres
+        run: kubectl apply -f k8s/
 
       - name: Wait for Database
-        run: |
-          kubectl rollout status deployment/postgres-deployment --timeout=60s
+        run: kubectl rollout status deployment/postgres-deployment --timeout=120s
 
       - name: Wait for backend to be ready
+        run: kubectl rollout status deployment/backend-deployment --timeout=120s
+
+      - name: Debug on Failure
+        if: failure()
         run: |
-          kubectl rollout status deployment/backend-deployment --timeout=90s
+          kubectl get pods
+          kubectl describe pods
+          kubectl logs -l app=postgres --tail=50
+          kubectl logs -l app=backend-deployment --tail=50
 
       - name: Run Master Validation Script
         run: |

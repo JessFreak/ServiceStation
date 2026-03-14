@@ -18,6 +18,7 @@ spec:
       containers:
         - name: ecommerce-app
           image: ecommerce-app:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
               protocol: TCP
