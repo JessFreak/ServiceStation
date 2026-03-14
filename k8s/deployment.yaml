@@ -24,10 +24,10 @@ spec:
               protocol: TCP
 
           envFrom:
-            - configMapRef:
-                name: app-config
             - secretRef:
                 name: app-secret
+            - configMapRef:
+                name: app-config
 
           livenessProbe:
             httpGet:
