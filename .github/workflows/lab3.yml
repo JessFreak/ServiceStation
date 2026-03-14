@@ -36,6 +36,8 @@ jobs:
       - name: Prepare Secret
         env:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_USER: "postgres"
+          DB_NAME: "service_station"
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
