@@ -1,0 +1,47 @@
+name: Lab 3 - Kubernetes (KinD)
+
+on: [push]
+
+jobs:
+  k8s-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create KinD cluster
+        uses: helm/kind-action@v1.12.0
+        with:
+          cluster_name: kind
+
+      - name: Build Docker image
+        run: |
+          docker build -t ghcr.io/${{ github.repository_owner }}/ecommerce-app:latest ./back
+
+      - name: Load image into KinD
+        run: |
+          kind load docker-image ghcr.io/${{ github.repository_owner }}/ecommerce-app:latest --name kind
+
+      - name: Prepare Secret
+        env:
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+        run: |
+          envsubst < k8s/secret.yaml > k8s/secret_ready.yaml
+          mv k8s/secret_ready.yaml k8s/secret.yaml
+
+      - name: Apply Kubernetes manifests
+        run: |
+          kubectl apply -f k8s/
+
+      - name: Wait for backend to be ready
+        run: |
+          kubectl rollout status deployment/backend-deployment --timeout=90s
+
+      - name: Run Master Validation Script
+        run: |
+          chmod +x ./tests/lab3_test.sh
+          ./tests/lab3_test.sh
