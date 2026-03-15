@@ -1,0 +1,18 @@
+name: Lab 4 - Helm Chart Grading
+
+on: [push]
+
+jobs:
+  helm-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4.2.0
+
+      - name: Run Lab 4 Tests
+        run: |
+          chmod +x ./tests/lab4_test.sh
+          ./tests/lab4_test.sh

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  DB_USER: {{ .Values.postgres.dbUser | quote }}
+  DB_HOST: "db-service"
+  DB_PORT: "5432"
+  DB_NAME: {{ .Values.postgres.dbName | quote }}
+  DATABASE_URL: "postgresql://{{ .Values.postgres.dbUser }}:{{ .Values.secrets.dbPassword }}@db-service:5432/{{ .Values.postgres.dbName }}?schema=public"
+  PORT: "8080"
+  JWT_EXPIRE: "1d"
+  GOOGLE_CALLBACK_URL: "http://localhost:8080/api/auth/google/callback"
+  CLIENT_URL: "http://localhost:80"
