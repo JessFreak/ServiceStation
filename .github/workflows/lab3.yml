@@ -1,0 +1,75 @@
+name: Lab 3 - Kubernetes (KinD)
+
+on: [push]
+
+env:
+  APP_NAME: ecommerce-app
+
+jobs:
+  k8s-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set lower case owner name
+        run: echo "OWNER_LC=${OWNER,,}" >> ${GITHUB_ENV}
+        env:
+          OWNER: '${{ github.repository_owner }}'
+
+      - name: Create KinD cluster
+        uses: helm/kind-action@v1.12.0
+        with:
+          cluster_name: kind
+
+      - name: Build and Pull images
+        run: |
+          docker build -t ghcr.io/${{ env.OWNER_LC }}/${{ env.APP_NAME }}:latest ./back
+          docker pull postgres:15-alpine
+
+      - name: Load images into KinD
+        run: |
+          kind load docker-image ghcr.io/${{ env.OWNER_LC }}/${{ env.APP_NAME }}:latest --name kind
+          kind load docker-image postgres:15-alpine --name kind
+
+      - name: Prepare All Manifests
+        run: |
+          export DB_PASSWORD="${{ secrets.DB_PASSWORD }}"
+          export DB_USER="postgres"
+          export DB_NAME="service_station"
+          export JWT_SECRET="${{ secrets.JWT_SECRET }}"
+          export GOOGLE_CLIENT_ID="${{ secrets.GOOGLE_CLIENT_ID }}"
+          export GOOGLE_CLIENT_SECRET="${{ secrets.GOOGLE_CLIENT_SECRET }}"
+          
+          mkdir -p k8s_ready
+          
+          for file in k8s/*.yaml; do
+            envsubst < "$file" > "k8s_ready/$(basename "$file")"
+          done
+          
+          rm -rf k8s && mv k8s_ready k8s
+
+      - name: Apply Kubernetes manifests
+        run: kubectl apply -f k8s/
+
+      - name: Wait for Database
+        run: kubectl rollout status deployment/postgres-deployment --timeout=120s
+
+      - name: Wait for backend to be ready
+        run: kubectl rollout status deployment/ecommerce-app --timeout=120s
+
+      - name: Debug on Failure
+        if: failure()
+        run: |
+          echo "=== PODS STATUS ==="
+          kubectl get pods
+          echo "=== POSTGRES LOGS ==="
+          kubectl logs -l app=postgres --tail=50
+          echo "=== BACKEND LOGS ==="
+          kubectl logs -l app=ecommerce-app --tail=50
+
+      - name: Run Master Validation Script
+        run: |
+          chmod +x ./tests/lab3_test.sh
+          ./tests/lab3_test.sh
